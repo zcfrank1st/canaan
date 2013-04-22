@@ -1,0 +1,23 @@
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<comment>canaan default values</comment>
+<entry key="CANAAN_HIVE_LOGIN_USERNAME">dwdev</entry>
+<entry key="CANAAN_HIVE_LOGIN_PASSWORD">password</entry>
+
+<entry key="BATCH_CACULATOR">com.dianping.data.warehouse.canaan.util.DWCalculator</entry>
+<entry key="BATCH_SERVER">HIVE_TEST</entry>
+<entry key="BATCH_USER">DWDEV</entry>
+<entry key="BATCH_DOL">dwdev.tg.dpmid_tg_test.dol</entry>
+<entry key="BATCH_TASK_ID">-999</entry>
+<entry key="BATCH_LOG_DIR">${CANAAN_HOME}/log</entry>
+<entry key="BATCH_DOL_DIR">${CANAAN_HOME}/dol</entry>
+<entry key="BATCH_MYJAR_DIR">${CANAAN_HOME}/myjar</entry>
+<entry key="BATCH_HIVE_CLIENT">${HIVE_HOME}/bin/hive</entry>
+<entry key="BATCH_HIVE_INIT_DIR">${CANAAN_HOME}/init</entry>
+<entry key="MYSQL_LOGIN_SWITCH">on</entry>
+<entry key="MYSQL_LOGIN_USERNAME">DianPingDW</entry>
+<entry key="MYSQL_LOGIN_PASSWORD">Diand32adjl3dvDW</entry>
+<entry key="MYSQL_LOGIN_HOST">10.1.1.220</entry>
+<entry key="MYSQL_LOGIN_PORT">3306</entry>
+<entry key="MYSQL_LOGIN_DATABASE">DianPingDW</entry>
+</properties>
