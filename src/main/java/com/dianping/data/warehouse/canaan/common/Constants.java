@@ -52,25 +52,31 @@ public class Constants {
 	public static final String PARAM_IN_DOL = "dol";
     public static final String PARAM_IN_STR = "str";
 	public static final String PARAM_IN_D = "d";
-	public static final String PARAM_IN_S = "s";
-	public static final String PARAM_IN_U = "u";
+//	public static final String PARAM_IN_S = "s";
+//	public static final String PARAM_IN_U = "u";
 	public static final String PARAM_IN_TID = "tid";
 	public static final String PARAM_IN_EXT = "E";
+    public static final String PARAM_IN_PRINT = "o";
+    //add by hongdi;support many dir
+    public static final String PARAM_IN_G = "g";
     public static final String PARAM_IN_P = "p";
-
+    public static final String PARAM_IN_T = "t";
 	public static final char PARAM_IN_EXT_DELIMITER = '=';
 
 	public static final String PARAM_IN_DESC_H = "short help";
 	public static final String PARAM_IN_DESC_C = "Caculator name";
 	public static final String PARAM_IN_DESC_DOL = "dol filename";
 	public static final String PARAM_IN_DESC_D = "date input";
-	public static final String PARAM_IN_DESC_S = "serverid: 5|6|7";
-	public static final String PARAM_IN_DESC_U = "user type: dwdev|bi";
+/*	public static final String PARAM_IN_DESC_S = "serverid: 5|6|7";
+	public static final String PARAM_IN_DESC_U = "user type: dwdev|bi";*/
 	public static final String PARAM_IN_DESC_TID = "scheduling task id";
 	public static final String PARAM_IN_DESC_EXT = "user defined parameters";
-    public static final String PARAM_IN_DESC_P = "only parse the dol and print sql";
+    public static final String PARAM_IN_DESC_PRINT = "only parse the dol and print sql";
     public static final String PARAM_IN_DESC_STR = "Text for dol";
-
+    //add by hongdi
+    public static final String PARAM_IN_DESC_G = "group account";
+    public static final String PARAM_IN_DESC_P = "product name";
+    public static final String PARAM_IN_DESC_T = "timestamp";
 	public static final String PARAM_IN_DESC_EXT_ARG = "paramN=valN";
 
     public static final String DOL_TYPE_DOL = "FILE";
@@ -84,27 +90,24 @@ public class Constants {
 		Constants.param2DescMapping.put(Constants.PARAM_IN_C, Constants.PARAM_IN_DESC_C);
 		Constants.param2DescMapping.put(Constants.PARAM_IN_DOL, Constants.PARAM_IN_DESC_DOL);
 		Constants.param2DescMapping.put(Constants.PARAM_IN_D, Constants.PARAM_IN_DESC_D);
-		Constants.param2DescMapping.put(Constants.PARAM_IN_S, Constants.PARAM_IN_DESC_S);
-		Constants.param2DescMapping.put(Constants.PARAM_IN_U, Constants.PARAM_IN_DESC_U);
+//		Constants.param2DescMapping.put(Constants.PARAM_IN_S, Constants.PARAM_IN_DESC_S);
+//		Constants.param2DescMapping.put(Constants.PARAM_IN_U, Constants.PARAM_IN_DESC_U);
 		Constants.param2DescMapping.put(Constants.PARAM_IN_TID, Constants.PARAM_IN_DESC_TID);
-        Constants.param2DescMapping.put(Constants.PARAM_IN_P, Constants.PARAM_IN_DESC_P);
+        Constants.param2DescMapping.put(Constants.PARAM_IN_PRINT, Constants.PARAM_IN_DESC_PRINT);
         Constants.param2DescMapping.put(Constants.PARAM_IN_STR, Constants.PARAM_IN_DESC_STR);
+        //add by hongdi
+        Constants.param2DescMapping.put(Constants.PARAM_IN_G, Constants.PARAM_IN_DESC_G);
+        Constants.param2DescMapping.put(Constants.PARAM_IN_P, Constants.PARAM_IN_DESC_P);
+        Constants.param2DescMapping.put(Constants.PARAM_IN_T, Constants.PARAM_IN_DESC_T);
 	}
 
 	public static enum BATCH_SERVERS {
 		HIVE_PROD, HIVE_DEV, HIVE_TEST
 	}
 
-	public static final Map<String, String> id2serverMapping = new HashMap<String, String>();
-	static {
-		Constants.id2serverMapping.put("5", BATCH_SERVERS.HIVE_PROD.toString());
-		Constants.id2serverMapping.put("6", BATCH_SERVERS.HIVE_DEV.toString());
-		Constants.id2serverMapping.put("7", BATCH_SERVERS.HIVE_TEST.toString());
-	}
-
 	public static enum BATCH_COMMON_VARS {
-		BATCH_CAL_DT, BATCH_DOL, BATCH_CACULATOR, BATCH_SERVER, BATCH_USER, CANAAN_HOME, CANAAN_CONF_SUBDIR, CANAAN_CONF_DIR, BATCH_DOL_DIR, BATCH_LOG_DIR, BATCH_MYJAR_DIR, BATCH_HIVE_CLIENT, BATCH_TASK_ID,
-		BATCH_HIVE_INIT_DIR,BATCH_PARSE_ONLY,BATCH_DOL_TYPE,BATCH_DOL_STR
+		BATCH_CAL_DT, BATCH_DOL, BATCH_CACULATOR, /*BATCH_SERVER, BATCH_USER,*/ CANAAN_HOME, CANAAN_CONF_SUBDIR, CANAAN_CONF_DIR, BATCH_DOL_DIR, BATCH_LOG_DIR, BATCH_MYJAR_DIR, BATCH_HIVE_CLIENT, BATCH_TASK_ID,
+		BATCH_HIVE_INIT_DIR,BATCH_PARSE_ONLY,BATCH_DOL_TYPE,BATCH_DOL_STR,BATCH_GROUP,BATCH_PRODUCT,BATCH_BASE_DOL_DIR,BATCH_TIMESTAMP
     }
 
 	public static final String COMMON_VARS_CAL_PREFIX = "CAL_"; /*
@@ -126,7 +129,8 @@ public class Constants {
 	    CAL_YYYYMMDD_P15D, CAL_YYYYMMDD_P16D,CAL_YYYYMMDD_P17D, CAL_YYYYMMDD_P18D,CAL_YYYYMMDD_P19D,CAL_YYYYMMDD_P20D, CAL_YYYYMMDD_P21D,
 	    CAL_YYYYMMDD_P22D, CAL_YYYYMMDD_P23D,CAL_YYYYMMDD_P24D, CAL_YYYYMMDD_P25D,CAL_YYYYMMDD_P26D,CAL_YYYYMMDD_P27D, CAL_YYYYMMDD_P28D,CAL_YYYYMMDD_P29D,CAL_YYYYMMDD_P30D,
 		CAL_YYYYMMDD_P1M, CAL_YYYYMMDD_P2M, CAL_YYYYMMDD_P3M, CAL_YYYYMMDD_P4M,CAL_YYYYMMDD_P5M, CAL_YYYYMMDD_P6M, CAL_YYYYMMDD_P7M, CAL_YYYYMMDD_P8M, CAL_YYYYMMDD_P9M, CAL_YYYYMMDD_P10M, CAL_YYYYMMDD_P11M, CAL_YYYYMMDD_P12M, 
-		CAL_YYYYMMDD_P1Y, CAL_YYYYMMDD_P2Y, CAL_YYYYMM, CAL_YYYYMM_P1D, CAL_YYYYMM_P2D, CAL_YYYYMM_P1M, CAL_YYYYMM_P2M, CAL_YYYYMM_P1Y, CAL_YYYYMM_P2Y, CAL_YYYY, CAL_YYYY_P1D, CAL_YYYY_P2D, CAL_YYYY_P1M, CAL_YYYY_P2M, CAL_YYYY_P1Y, CAL_YYYY_P2Y, CAL_YYYYMMDD_N1D, CAL_YYYYMMDD_N2D, CAL_YYYYMMDD_N1M, CAL_YYYYMMDD_N2M, CAL_YYYYMMDD_N1Y, CAL_YYYYMMDD_N2Y, CAL_YYYYMM_N1D, CAL_YYYYMM_N2D, CAL_YYYYMM_N1M, CAL_YYYYMM_N2M, CAL_YYYYMM_N1Y, CAL_YYYYMM_N2Y, CAL_YYYY_N1D, CAL_YYYY_N2D, CAL_YYYY_N1M, CAL_YYYY_N2M, CAL_YYYY_N1Y, CAL_YYYY_N2Y, CAL_YYYYMMDD_P1DOW, CAL_YYYYMMDD_P2DOW, CAL_YYYYMMDD_P3DOW, CAL_YYYYMMDD_P4DOW, CAL_YYYYMMDD_P5DOW, CAL_YYYYMMDD_P6DOW, CAL_YYYYMMDD_P7DOW, CAL_YYYYMMDD_P8DOW, CAL_YYYYMMDD_P9DOW, CAL_YYYYMMDD_P10DOW, CAL_YYYYMM_P1DOW, CAL_YYYYMM_P2DOW, CAL_YYYY_P1DOW, CAL_YYYY_P2DOW, CAL_YYYYMMDD_P1DOM, CAL_YYYYMMDD_P2DOM, CAL_YYYYMM_P1DOM, CAL_YYYYMM_P2DOM, CAL_YYYY_P1DOM, CAL_YYYY_P2DOM, CAL_YYYYMMDD_P1DOY, CAL_YYYYMMDD_P2DOY, CAL_YYYYMM_P1DOY, CAL_YYYYMM_P2DOY, CAL_YYYY_P1DOY, CAL_YYYY_P2DOY, CAL_YYYYMMDD_P1DOWIM, CAL_YYYYMMDD_P2DOWIM, CAL_YYYYMM_P1DOWIM, CAL_YYYYMM_P2DOWIM, CAL_YYYY_P1DOWIM, CAL_YYYY_P2DOWIM;
+		CAL_YYYYMMDD_P1Y, CAL_YYYYMMDD_P2Y, CAL_YYYYMM, CAL_YYYYMM_P1D, CAL_YYYYMM_P2D, CAL_YYYYMM_P1M, CAL_YYYYMM_P2M, CAL_YYYYMM_P1Y, CAL_YYYYMM_P2Y, CAL_YYYY, CAL_YYYY_P1D, CAL_YYYY_P2D, CAL_YYYY_P1M, CAL_YYYY_P2M, CAL_YYYY_P1Y, CAL_YYYY_P2Y, CAL_YYYYMMDD_N1D, CAL_YYYYMMDD_N2D, CAL_YYYYMMDD_N1M, CAL_YYYYMMDD_N2M, CAL_YYYYMMDD_N1Y, CAL_YYYYMMDD_N2Y, CAL_YYYYMM_N1D, CAL_YYYYMM_N2D, CAL_YYYYMM_N1M, CAL_YYYYMM_N2M, CAL_YYYYMM_N1Y, CAL_YYYYMM_N2Y, CAL_YYYY_N1D, CAL_YYYY_N2D, CAL_YYYY_N1M, CAL_YYYY_N2M, CAL_YYYY_N1Y, CAL_YYYY_N2Y, CAL_YYYYMMDD_P1DOW, CAL_YYYYMMDD_P2DOW, CAL_YYYYMMDD_P3DOW, CAL_YYYYMMDD_P4DOW, CAL_YYYYMMDD_P5DOW, CAL_YYYYMMDD_P6DOW, CAL_YYYYMMDD_P7DOW, CAL_YYYYMMDD_P8DOW, CAL_YYYYMMDD_P9DOW, CAL_YYYYMMDD_P10DOW, CAL_YYYYMM_P1DOW, CAL_YYYYMM_P2DOW, CAL_YYYY_P1DOW, CAL_YYYY_P2DOW, CAL_YYYYMMDD_P1DOM, CAL_YYYYMMDD_P2DOM, CAL_YYYYMM_P1DOM, CAL_YYYYMM_P2DOM, CAL_YYYY_P1DOM, CAL_YYYY_P2DOM, CAL_YYYYMMDD_P1DOY, CAL_YYYYMMDD_P2DOY, CAL_YYYYMM_P1DOY, CAL_YYYYMM_P2DOY, CAL_YYYY_P1DOY, CAL_YYYY_P2DOY, CAL_YYYYMMDD_P1DOWIM, CAL_YYYYMMDD_P2DOWIM, CAL_YYYYMM_P1DOWIM, CAL_YYYYMM_P2DOWIM, CAL_YYYY_P1DOWIM, CAL_YYYY_P2DOWIM,
+        CAL_HH;
 
 		public String toString() {
 			return this.name().replace(Constants.COMMON_VARS_CAL_PREFIX, "");
@@ -139,17 +143,21 @@ public class Constants {
 		Constants.param2ContextVarMapping.put(Constants.PARAM_IN_D, BATCH_COMMON_VARS.BATCH_CAL_DT.toString());
 		Constants.param2ContextVarMapping.put(Constants.PARAM_IN_DOL, BATCH_COMMON_VARS.BATCH_DOL.toString());
 		Constants.param2ContextVarMapping.put(Constants.PARAM_IN_C, BATCH_COMMON_VARS.BATCH_CACULATOR.toString());
-		Constants.param2ContextVarMapping.put(Constants.PARAM_IN_S, BATCH_COMMON_VARS.BATCH_SERVER.toString());
-		Constants.param2ContextVarMapping.put(Constants.PARAM_IN_U, BATCH_COMMON_VARS.BATCH_USER.toString());
+//		Constants.param2ContextVarMapping.put(Constants.PARAM_IN_S, BATCH_COMMON_VARS.BATCH_SERVER.toString());
+//		Constants.param2ContextVarMapping.put(Constants.PARAM_IN_U, BATCH_COMMON_VARS.BATCH_USER.toString());
 		Constants.param2ContextVarMapping.put(Constants.PARAM_IN_TID, BATCH_COMMON_VARS.BATCH_TASK_ID.toString());
-        Constants.param2ContextVarMapping.put(Constants.PARAM_IN_P, BATCH_COMMON_VARS.BATCH_PARSE_ONLY.toString());
-        Constants.param2ContextVarMapping.put(Constants.PARAM_IN_STR, BATCH_COMMON_VARS.BATCH_DOL_STR.toString());
-	}
+        Constants.param2ContextVarMapping.put(Constants.PARAM_IN_PRINT, BATCH_COMMON_VARS.BATCH_PARSE_ONLY.toString());
+        Constants.param2ContextVarMapping.put(Constants.PARAM_IN_STR, BATCH_COMMON_VARS.BATCH_DOL_STR.toString());      
+        //add by hongdi
+        Constants.param2ContextVarMapping.put(Constants.PARAM_IN_G, BATCH_COMMON_VARS.BATCH_GROUP.toString());
+        Constants.param2ContextVarMapping.put(Constants.PARAM_IN_P, BATCH_COMMON_VARS.BATCH_PRODUCT.toString());
+        Constants.param2ContextVarMapping.put(Constants.PARAM_IN_T, BATCH_COMMON_VARS.BATCH_TIMESTAMP.toString());
+    }
 
 	public static enum BATCH_USERS {
 		DWDEV, BI
 	}
-
+	
 	public static final String DEFAULT_CONF_NAME = "canaan.property.defaultConf";
 	public static int DEFAULT_BATCH_CAL_DT_OFFSET = -1;
 

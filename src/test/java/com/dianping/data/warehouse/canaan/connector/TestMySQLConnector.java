@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import junit.framework.TestCase;
 
 import com.dianping.data.warehouse.canaan.conf.CanaanConf;
-import com.dianping.data.warehouse.canaan.connector.MySQLConnector;
 
 public class TestMySQLConnector extends TestCase {
 	public void testExecute() throws FileNotFoundException, IOException,

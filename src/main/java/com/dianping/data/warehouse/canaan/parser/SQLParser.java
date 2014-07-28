@@ -22,14 +22,16 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.dianping.data.warehouse.canaan.common.Constants;
+import com.dianping.data.warehouse.canaan.connector.MySQLConnector;
 import org.apache.commons.lang.text.StrBuilder;
 import org.apache.hadoop.hive.ql.parse.ParseException;
 import org.apache.log4j.Logger;
 
 import com.dianping.data.warehouse.canaan.conf.CanaanConf;
-import com.dianping.data.warehouse.canaan.connector.MySQLConnector;
 import com.dianping.data.warehouse.canaan.dolite.DOLite;
 
 import com.dianping.data.warehouse.canaan.pedigree.AnalyzeResult;
@@ -74,20 +76,28 @@ public class SQLParser {
 	private boolean canParse(String sql) {
 		// filter like "set mapred.reduce.tasks=100"
 		for(String prefix: Constants.NOSQL_PREFIX1){
-			if (sql.trim().startsWith(prefix)) {
+			if (sql.trim().toLowerCase().startsWith(prefix)) {
 				return false;
 			}
 		}
 		for(String prefix:Constants.NOSQL_PREFIX2){
-			if (sql.trim().startsWith(prefix)) {
+			if (sql.trim().toLowerCase().startsWith(prefix)) {
 				return false;
 			}
 		}
-		return true;
+
+        // temp solution for add temporary function
+        String regEx="create\\s+temporary\\s+function"; //表示一个或多个@
+        Pattern pat=Pattern.compile(regEx);
+        Matcher mat=pat.matcher(sql.trim().toLowerCase());
+        if (mat.find()) {
+            return false;
+        }
+        return true;
 	}
 
 	public void parse() throws ParseException {
-		if (isDolite == true) {
+		if (isDolite) {
 			for (int line = 1; line <= dolite.size(); line++) {
 				if (canParse(dolite.get(line))) {
 					pedigreeAnalyzeResult.put(line,

@@ -25,6 +25,8 @@ import com.dianping.data.warehouse.canaan.common.Constants;
 import com.dianping.data.warehouse.canaan.common.HiveCMDInfo;
 import com.dianping.data.warehouse.canaan.exception.HiveClientNotFoundException;
 import com.dianping.data.warehouse.canaan.exception.HiveInitFileNotFoundException;
+import com.dianping.data.warehouse.canaan.util.ExceptionAlertDO;
+import com.dianping.data.warehouse.canaan.util.ExceptionAnalyze;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
@@ -62,8 +64,9 @@ public class HiveDriver implements Driver {
     public int execute(ArrayList<HiveCMDInfo> list,
                        boolean returnResultFlag) throws IOException, InterruptedException,
             ClassNotFoundException, SQLException {
-        StringBuffer sb = new StringBuffer();
+        ExceptionAnalyze exceptionAnalyze = new ExceptionAnalyze();
 
+        StringBuffer sb = new StringBuffer();
         // set StringBuffer empty
         sb.setLength(0);
         for (HiveCMDInfo hiveCI : list) {
@@ -77,7 +80,6 @@ public class HiveDriver implements Driver {
         if (sb.length() == 0)
             return Constants.RET_FAILED;
         FileUtils.writeStringToFile(new File(CMD_HEAD[6]), sb.toString(), this.fileEncoding);
-
         Runtime rt = Runtime.getRuntime();
         String[] cmd = CMD_HEAD.clone();
 
@@ -94,7 +96,13 @@ public class HiveDriver implements Driver {
         int retCode = proc.waitFor();
         logger.info("SQL retCode:" + retCode);
         // hiveCI = parseHiveCMDInfo(hiveCI,stderrList);
-        return (retCode != 0 ? Constants.RET_FAILED : Constants.RET_SUCCESS);
+        if (retCode != 0) {
+            ExceptionAlertDO alert = exceptionAnalyze.analyze(stderr);
+            if (alert != null)
+                return alert.getId();
+            return 16;
+        } else
+            return Constants.RET_SUCCESS;
     }
 
     public void setHiveClientPath(String cliPath)
@@ -119,7 +127,6 @@ public class HiveDriver implements Driver {
             this.CMD_HEAD[4] = initPath
                     + (initPath.endsWith(File.separator) ? "hive-init.sql"
                     : File.separator + "hive-init.sql");
-        // System.out.println(CMD_HEAD[4]);
         if (!new File(this.CMD_HEAD[4]).exists())
             throw new HiveInitFileNotFoundException();
     }

@@ -34,15 +34,19 @@ public class MySQLConnector {
                 .toString());
     }
 
-    public void connect() throws ClassNotFoundException, SQLException {
-        if ((jdbcswitch == null) || ((jdbcswitch == null) || (jdbcswitch.equals("off"))))
+    public void connect() throws ClassNotFoundException {
+        if ((jdbcswitch == null) ||  (jdbcswitch.equals("off")))
             return;
         Class.forName("com.mysql.jdbc.Driver");
-        conn = DriverManager.getConnection(jdbcurl, username, password);
+        try {
+            conn = DriverManager.getConnection(jdbcurl, username, password);
+        } catch (SQLException e) {
+            logger.warn("Mysql log failed");
+        }
     }
 
     @Deprecated
-    public void execute(String sql) throws SQLException, ClassNotFoundException {
+    public void execute(String sql) throws ClassNotFoundException {
         if ((jdbcswitch == null) || (jdbcswitch.equals("off")))
             return;
         try {
@@ -58,38 +62,24 @@ public class MySQLConnector {
             }
             stmt.close();
         } catch (SQLException e) {
-            connect();
-            logger.warn("Re-connect to mysql.");
-            Statement stmt = conn.createStatement();
-            String newsql = null;
-            if (sql.endsWith(";"))
-                newsql = sql.substring(0, sql.length() - 1);
-            else
-                newsql = sql;
-            String[] sqllist = newsql.split(";");
-            for (int i = 0; i < sqllist.length; i++) {
-                stmt.execute(sqllist[i]);
-            }
-            stmt.close();
+            logger.warn("Mysql log failed");
         }
     }
 
-    public long executeUpdate(String sql) throws SQLException, ClassNotFoundException {
+    public long executeUpdate(String sql) throws ClassNotFoundException {
         if ((jdbcswitch == null) || (jdbcswitch.equals("off")))
             return 1;
         try {
             PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             return executeUpdate(pstmt);
         } catch (SQLException e) {
-            connect();
-            logger.warn("Re-connect to mysql.");
+            logger.warn("Mysql log failed");
         }
-        PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-        return executeUpdate(pstmt);
+            return 0;
     }
 
-    public long executeUpdate(PreparedStatement pstmt) throws SQLException, ClassNotFoundException {
-        if ((jdbcswitch == null) || (jdbcswitch.equals("off")))
+    public long executeUpdate(PreparedStatement pstmt) throws ClassNotFoundException {
+        if ((jdbcswitch == null) || (jdbcswitch.equals("off")) || (pstmt == null))
             return 0;
         try {
             pstmt.executeUpdate();
@@ -99,28 +89,20 @@ public class MySQLConnector {
                 return id;
             }
         } catch (SQLException e) {
-            connect();
-            logger.warn("Re-connect to mysql.");
-        }
-        pstmt.executeUpdate();
-        ResultSet rs = pstmt.getGeneratedKeys();
-        if (rs.next()) {
-            int id = rs.getInt(1);
-            return id;
+            logger.warn("Mysql log failed");
         }
         return 0;
     }
 
-    public PreparedStatement getPstmt(String sql) throws SQLException, ClassNotFoundException {
+    public PreparedStatement getPstmt(String sql) throws ClassNotFoundException {
         if ((jdbcswitch == null) || (jdbcswitch.equals("off")))
             return null;
         try {
             return conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
         } catch (SQLException e) {
-            connect();
-            logger.warn("Re-connect to mysql.");
+            logger.warn("Mysql log failed");
         }
-        return conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+        return null;
     }
 
     public void close() {

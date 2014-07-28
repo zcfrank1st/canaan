@@ -101,14 +101,16 @@ public class Manager {
     private void parseSQL() throws ParseException, ClassNotFoundException, IOException, SQLException {
         logger.info("SQLParser Begins");
         SQLParser sqlParser = new SQLParser(conf.getDOLite());
+        //得到上下游关系和hive sql，并且持久化到AnalyzeResult
         sqlParser.parse();
-        sqlParser.persist();
+        //将上下游关系插入数据库
+        sqlParser.persist();     
         logger.info(sqlParser.toString());
         logger.info("SQLParser Ends");
     }
 
     private int execute() throws Exception {
-        logger.info("Executor Begins");
+        logger.info("Executor Begins");       
         String classType = conf
                 .getCanaanVariables(Constants.BATCH_COMMON_VARS.BATCH_CACULATOR
                         .toString());
@@ -122,9 +124,8 @@ public class Manager {
                                 .toString()),
                         Constants.BATCH_COMMON_VARS.CANAAN_HOME.toString() + "=" + conf.getCanaanVariables(Constants.BATCH_COMMON_VARS.CANAAN_HOME.toString())
                         , conf.getHiveTmpPath());
-
         Executor executor = new Executor(calculator);
-        executor.setDOLite(conf.getDOLite());
+        executor.setDOLite(conf.getDOLite());        
         int retCode = executor.execute();
         logger.info("Executor Ends");
         return retCode;
@@ -138,8 +139,8 @@ public class Manager {
         init();
         Properties p = parseOption();
         boolean parseOnly = p.getProperty(Constants.BATCH_COMMON_VARS.BATCH_PARSE_ONLY.toString()).equals("T");
-        parseDOL(parseOnly);
-        parseSQL();
+        parseDOL(parseOnly);        
+        parseSQL();        
         int status = 0;
         if (!parseOnly)
             status = execute();
@@ -167,5 +168,6 @@ public class Manager {
             m.deleteTmpFile();
         }
         System.exit(exitCode);
+        System.currentTimeMillis();
     }
 }

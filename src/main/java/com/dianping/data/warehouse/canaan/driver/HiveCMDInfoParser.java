@@ -49,16 +49,16 @@ public class HiveCMDInfoParser {
 
     static {
         JOB_INFO_PREFIX.put(JOB_INFO_PREFIX_KEY.JOB_START.toString(),
-                Pattern.compile("Starting Job = ([-?\\w]*), Tracking URL = (.*)"));
+                Pattern.compile("Starting Job = ([\\w]*), Tracking URL = (.*)"));
         JOB_INFO_PREFIX.put(JOB_INFO_PREFIX_KEY.JOB_KILL_CMD.toString(),
                 Pattern.compile("Kill Command = (.*)"));
         JOB_INFO_PREFIX.put(JOB_INFO_PREFIX_KEY.JOB_KILL.toString(),
-                Pattern.compile("-kill ([-?\\w]*)"));
+                Pattern.compile("-kill ([\\w]*)"));
         JOB_INFO_PREFIX
                 .put(JOB_INFO_PREFIX_KEY.JOB_MAPR_INFO.toString(),
                         Pattern.compile("Hadoop job information for Stage-\\d+: number of mappers: (\\d+); number of reducers: (\\d+)"));
         JOB_INFO_PREFIX.put(JOB_INFO_PREFIX_KEY.JOB_END.toString(),
-                Pattern.compile("Ended Job = ([-?\\w]*)"));
+                Pattern.compile("Ended Job = ([\\w]*)"));
         JOB_INFO_PREFIX
                 .put(JOB_INFO_PREFIX_KEY.JOB_HDFS_INFO.toString(),
                         Pattern.compile("Job \\d+:.* HDFS Read: (\\d+) HDFS Write: (\\d+) ([A-Z]+)"));

@@ -22,7 +22,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-import com.dianping.data.warehouse.canaan.common.Constants;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.HelpFormatter;
@@ -31,9 +30,13 @@ import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.PosixParser;
 
+import com.dianping.data.warehouse.canaan.common.Constants;
 import com.dianping.data.warehouse.canaan.exception.CanaanPrintHelpException;
 import com.dianping.data.warehouse.canaan.exception.ParamNotSupportException;
 import com.dianping.data.warehouse.canaan.util.DateUtils;
+import org.joda.time.DateTime;
+
+import java.util.Date;
 
 /**
  * TODO Comment of OptionParser
@@ -53,7 +56,7 @@ public class OptionParser {
 			if (k.equals(Constants.PARAM_IN_H.toString()))
 				options.addOption(Constants.PARAM_IN_H, false, Constants.PARAM_IN_DESC_H);
 			// for others:
-			else if (k.equals(Constants.PARAM_IN_P.toString()))
+			else if (k.equals(Constants.PARAM_IN_PRINT.toString()))
                 options.addOption(k,false,Constants.param2DescMapping.get(k));
 			else
                 options.addOption(k, true, Constants.param2DescMapping.get(k));
@@ -90,7 +93,17 @@ public class OptionParser {
 				throw new CanaanPrintHelpException("Print Help");
 			}
             else {
-
+            	/*
+                 * for dol str
+                 */
+                if (cl.hasOption(Constants.PARAM_IN_STR) && cl.hasOption(Constants.PARAM_IN_DOL))
+                    throw new ParamNotSupportException("ARGS_CONFILCTED");
+                if (cl.hasOption(Constants.PARAM_IN_T) && (cl.hasOption(Constants.PARAM_IN_D)))
+                    throw new ParamNotSupportException("ARGS_CONFILCTED");
+                else if (cl.hasOption(Constants.PARAM_IN_STR))
+                    map.put(Constants.BATCH_COMMON_VARS.BATCH_DOL_TYPE.toString(),Constants.DOL_TYPE_STR);
+                else map.put(Constants.BATCH_COMMON_VARS.BATCH_DOL_TYPE.toString(),Constants.DOL_TYPE_DOL);
+                
 				/*
 				 * load common args
 				 */
@@ -101,49 +114,39 @@ public class OptionParser {
 					/*
 					 * date to standard date string
 					 */
-					if (var.equals(Constants.BATCH_COMMON_VARS.BATCH_CAL_DT.toString())) {
+					if (var.equals(Constants.BATCH_COMMON_VARS.BATCH_CAL_DT.toString()))
+                    {
 						if (value != null) {
 							try {
 								value = DateUtils.getFormatDateString(value);
 							} catch (Exception e) {
-								// TODO Auto-generated catch block
 								throw new ParamNotSupportException("ERROR_DATE_VALUE_NOTSUPPORT");
 							}
 						}
 					}
-
-					/*
-					 * server id => standard server constant
-					 */
-					if (var.equals(Constants.BATCH_COMMON_VARS.BATCH_SERVER.toString())) {
-						if (value != null) {
-							String s = Constants.id2serverMapping.get(value);
-							if (s == null)
-								throw new ParamNotSupportException("ERROR_SERVERID_NOTSUPPORT");
-							value = s;
-						}
-					}
-
-					/*
-					 * user type => standard user constant
-					 */
-					if (var.equals(Constants.BATCH_COMMON_VARS.BATCH_USER.toString())) {
-						if (value != null) {
-							boolean bUserChk = false;
-							for (Constants.BATCH_USERS ut : Constants.BATCH_USERS.values())
-								if (value.toUpperCase().equals(ut.toString())) {
-									value = ut.toString();
-									bUserChk = true;
-								}
-							if (!bUserChk)
-								throw new ParamNotSupportException("ERROR_USER_NOTSUPPORT");
-						}
-					}
-
+                    else if (var.equals(Constants.BATCH_COMMON_VARS.BATCH_TIMESTAMP.toString()))
+                    {
+                        if (value != null) {
+                            try {
+                                long ts = Long.parseLong(value);
+                                long min_ts = Long.parseLong("1000000000000");
+                                if (ts <=  min_ts)
+                                {
+                                    ts *= 1000;
+                                }
+                                ts -= 3600000;
+                                DateTime d  = new DateTime(ts);
+                                map.put(Constants.BATCH_COMMON_VARS.BATCH_CAL_DT.toString(), DateUtils.getFormatDateString(d.toString("yyyy-MM-dd")));
+              					value =  d.toString("HH");
+                            } catch (Exception e) {
+                                throw new ParamNotSupportException("ERROR_DATE_VALUE_NOTSUPPORT");
+                            }
+                        }
+                    }
 					/*
 					 * dol pathname => filename
-					 */
-					if (var.equals(Constants.BATCH_COMMON_VARS.BATCH_DOL.toString())) {
+					*/
+					else if (var.equals(Constants.BATCH_COMMON_VARS.BATCH_DOL.toString())) {
 						if (value != null) {
 							try {
 								value = value.substring(value.lastIndexOf(File.separator)+1);
@@ -152,32 +155,23 @@ public class OptionParser {
 								throw new ParamNotSupportException("ERROR_DOL_FILENAME");
 							}
 						}
-					}
+					}										
 					// System.out.println("-" + key + ": " + val);
 					map.put(Constants.param2ContextVarMapping.get(key), value);
 
-                }
+                }				
                 /*
-                 * parse only option for -p
+                 * parse only option for -print
                 */
-                if (cl.hasOption(Constants.PARAM_IN_P))
+                if (cl.hasOption(Constants.PARAM_IN_PRINT))
                 {
-                    map.put(Constants.param2ContextVarMapping.get(Constants.PARAM_IN_P),"T");
+                    map.put(Constants.param2ContextVarMapping.get(Constants.PARAM_IN_PRINT),"T");
                 }
                 else
                 {
-                    map.put(Constants.param2ContextVarMapping.get(Constants.PARAM_IN_P),"F");
-                }
-
-                /*
-                 * for dol str
-                 */
-                if (cl.hasOption(Constants.PARAM_IN_STR) && cl.hasOption(Constants.PARAM_IN_DOL))
-                    throw new ParamNotSupportException("ARGS_CONFILCTED");
-                else if (cl.hasOption(Constants.PARAM_IN_STR))
-                    map.put(Constants.BATCH_COMMON_VARS.BATCH_DOL_TYPE.toString(),Constants.DOL_TYPE_STR);
-                else map.put(Constants.BATCH_COMMON_VARS.BATCH_DOL_TYPE.toString(),Constants.DOL_TYPE_DOL);
-
+                    map.put(Constants.param2ContextVarMapping.get(Constants.PARAM_IN_PRINT),"F");
+                }                               
+                
 				/*
 				 * load extended args
 				 */

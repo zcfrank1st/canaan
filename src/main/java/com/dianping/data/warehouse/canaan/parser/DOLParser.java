@@ -17,6 +17,7 @@ import com.dianping.data.warehouse.canaan.dolite.DOLiteFactory;
 import com.dianping.data.warehouse.canaan.dolite.VelocityDOLiteFactory;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.hsqldb.lib.StringUtil;
 
 public class DOLParser extends AbstractModule {
 	private DOLite dolite;
@@ -37,12 +38,34 @@ public class DOLParser extends AbstractModule {
 	}
 
 	public DOLParser(CanaanConf canaanConf) throws IOException {
-        this.DOLHome = canaanConf.getCanaanVariables(Constants.BATCH_COMMON_VARS.BATCH_DOL_DIR.toString());
+		//modify by hongdi
+		String product = canaanConf.getCanaanVariables(Constants.BATCH_COMMON_VARS.BATCH_PRODUCT.toString());
+		
+		String group = canaanConf.getCanaanVariables(Constants.BATCH_COMMON_VARS.BATCH_GROUP.toString());
+		String baseHome = canaanConf.getCanaanVariables(Constants.BATCH_COMMON_VARS.BATCH_BASE_DOL_DIR.toString());
+		
+		System.err.println("product :="+ product);
+		System.err.println("group :="+ group);
+		System.err.println("baseHome :="+ baseHome);
+		
+		if(!StringUtil.isEmpty(group)){
+			if(!StringUtil.isEmpty(product)){
+				this.DOLHome = new StringBuilder().append(baseHome).append(File.separator).append(group).append(File.separator).append(product).toString();
+			}else{
+				this.DOLHome = new StringBuilder().append(baseHome).append(File.separator).append(group).toString();
+			}
+								
+		}else{
+			this.DOLHome = canaanConf.getCanaanVariables(Constants.BATCH_COMMON_VARS.BATCH_DOL_DIR.toString());
+		}
+		
+		System.err.println("DOLHome :="+ DOLHome);
+		
         this.fileName = canaanConf.getCanaanVariables(Constants.BATCH_COMMON_VARS.BATCH_DOL.toString());
         if (canaanConf.getCanaanVariables(Constants.BATCH_COMMON_VARS.BATCH_DOL_TYPE.toString()).equals(Constants.DOL_TYPE_DOL))
         {
             String fullPath = FilenameUtils
-                    .concat(this.DOLHome,this.fileName);
+                    .concat(this.DOLHome,this.fileName);   
             this.str = FileUtils.readFileToString(new File(fullPath), fileEncoding);
         }
         else
@@ -53,10 +76,11 @@ public class DOLParser extends AbstractModule {
 		this.props = canaanConf.getCanaanProperties();
 	}
 
-	public DOLite getDOLite() throws Exception {
+	public DOLite getDOLite() throws Exception {		
 		Injector injector = Guice.createInjector(new Module[] { this });
 		DOLiteFactory factory = (DOLiteFactory) injector.getInstance(DOLiteFactory.class);
-		dolite = factory.produce(taskId, fileName,str);
+		dolite = factory.produce(taskId, fileName,str);		
 		return dolite;
 	}
 }
+
