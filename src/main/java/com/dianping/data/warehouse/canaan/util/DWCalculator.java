@@ -40,7 +40,7 @@ public class DWCalculator extends Calculator {
      * @see com.dianping.data.warehouse.canaan.util.Calculator#calculate()
      */
     @Override
-    public int calculate(DOLite doLite) throws Exception {
+    public int calculate(DOLite doLite) throws Exception {  	
         Logger log = Logger.getLogger(DWCalculator.class);
         String sql;
         log.info("DWCaculator is running");
@@ -50,7 +50,7 @@ public class DWCalculator extends Calculator {
             if((!sql.endsWith(";"))&&(sql.length()!=0))
                 sql += ";";
             list.add(new HiveCMDInfo(sql));
-        }
+        }       
         return super.driver.execute(list);
     }
 }

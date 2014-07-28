@@ -158,7 +158,22 @@ public class TestOptionParser extends TestCase {
         System.out.println(ln);
     }
     public void testPrint() throws Exception {
-        String str = new String("canaan.jar -c DWCaculator -dol dwdev.tg.dpmid_tg_test -d20120902 -s5 -u dwdev -Eparam1=val1 -Eparam2=val2 -p");
+        String str = new String("canaan.jar -c DWCaculator -dol dwdev.tg.dpmid_tg_test -d20120902 -Eparam1=val1 -Eparam2=val2 -o");
+        String args[] = str.split(" ");
+        System.out.println(str);
+        System.out.println(ln);
+        Map<String,String> map = new HashMap<String,String>();
+        OptionParser.process(args,map);
+        for (String k : map.keySet()) {
+            System.out.println(k + ":\t" + map.get(k));
+        }
+        System.out.println();
+        System.out.println(ln);
+        assertEquals(true,true);
+    }
+
+    public void testHH() throws Exception {
+        String str = new String("canaan.jar -dol test -t 1393570800");
         String args[] = str.split(" ");
         System.out.println(str);
         System.out.println(ln);

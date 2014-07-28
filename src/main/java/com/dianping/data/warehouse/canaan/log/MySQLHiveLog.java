@@ -6,11 +6,11 @@ import java.sql.Timestamp;
 import java.util.Iterator;
 import java.util.List;
 
+import com.dianping.data.warehouse.canaan.connector.MySQLConnector;
 import org.apache.log4j.Logger;
 
 import com.dianping.data.warehouse.canaan.common.HiveCMDInfo;
 import com.dianping.data.warehouse.canaan.common.HiveJobInfo;
-import com.dianping.data.warehouse.canaan.connector.MySQLConnector;
 
 public class MySQLHiveLog implements HiveLog {
 	private static final Logger logger = Logger.getLogger(MySQLHiveLog.class);

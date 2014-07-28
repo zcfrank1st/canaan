@@ -15,11 +15,20 @@
  */
 package com.dianping.data.warehouse.canaan.util;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * TODO Comment of Calculator
  * @author yifan.cao
  *
  */
 public class TestCalculator {
-
+	public static void main(String[] args){
+		Map<String,Integer> m = new HashMap<String,Integer>();
+		m.put("22", 2);
+		System.out.println(m.size());
+		m.remove("22");
+		System.out.println(m.size());
+	}
 }

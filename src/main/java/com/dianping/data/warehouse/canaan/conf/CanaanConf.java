@@ -19,6 +19,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.lang.management.ManagementFactory;
+import java.lang.management.RuntimeMXBean;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -54,15 +56,24 @@ public class CanaanConf {
 		conf.init();
 		return conf;
 	}
-
+	
+	/************
+	 * 完成初始化
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 */
 	private void init() throws FileNotFoundException, IOException {
 		loadEnvConf();
+		
 		loadDefaultConf(new StringBuilder()
 				.append(getCanaanVariables(Constants.BATCH_COMMON_VARS.CANAAN_CONF_DIR
 						.toString())).append(File.separator)
 				.append(Constants.DEFAULT_CONF_NAME).toString());
 	}
-
+	
+	/*************
+	 * 加载环境变量
+	 */
 	public void loadEnvConf() {
 		Map<String, String> em = System.getenv();
 		for (String k : em.keySet()) {
@@ -80,7 +91,13 @@ public class CanaanConf {
 						.append("conf").append(File.separator).append(confsub)
 						.toString());
 	}
-
+	
+	/*************
+	 * 加载配置文件变量
+	 * @param filePath
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 */
 	public void loadDefaultConf(String filePath) throws FileNotFoundException,
 			IOException {
 		FileInputStream inputFile = new FileInputStream(filePath);
@@ -172,29 +189,39 @@ public class CanaanConf {
 		return hiveLogConf;
 	}
 
-	public String getHiveTmpPath() {
-		if (tmpPath != null)
-			return tmpPath;
-		else {
-			if (getCanaanVariables(Constants.BATCH_COMMON_VARS.BATCH_DOL
-					.toString()) == null)
-				return null;
-			String tmpDirPath = getCanaanVariables(Constants.BATCH_COMMON_VARS.CANAAN_HOME
-					.toString()) + File.separator + "tmp";
-			File tmpDir = new File(tmpDirPath);
-			if (!tmpDir.exists()) {
-				tmpDir.mkdir();
-			}
-			Random ran = new Random(System.currentTimeMillis());
-			tmpPath = tmpDirPath
-					+ File.separator
-					+ getCanaanVariables(Constants.BATCH_COMMON_VARS.BATCH_DOL
-							.toString()) + "."
-					+ Constants.LONG_DF_FOR_FILENAME.format(new Date()) + "_"
-					+ ran.nextInt(10000);
-		}
-		return tmpPath;
-	}
+    public String getHiveTmpPath() {
+        if (tmpPath != null)
+            return tmpPath;
+        else {
+            if (getCanaanVariables(Constants.BATCH_COMMON_VARS.BATCH_DOL
+                    .toString()) == null)
+                return null;
+            RuntimeMXBean runtime = ManagementFactory.getRuntimeMXBean();
+            String name = runtime.getName(); // format: "pid@hostname"
+            String pid = "0";
+            try {
+                pid = name.substring(0, name.indexOf('@'));
+            } catch (Exception ignored) {
+            }
+
+            String tmpDirPath = getCanaanVariables(Constants.BATCH_COMMON_VARS.CANAAN_HOME
+                    .toString()) + File.separator + "tmp";
+            File tmpDir = new File(tmpDirPath);
+            if (!tmpDir.exists()) {
+                tmpDir.mkdir();
+            }
+            Random ran = new Random(System.currentTimeMillis());
+            tmpPath = tmpDirPath
+                    + File.separator
+                    + getCanaanVariables(Constants.BATCH_COMMON_VARS.BATCH_DOL
+                    .toString()) + "."
+                    + Constants.LONG_DF_FOR_FILENAME.format(new Date()) + "_"
+                    + ran.nextInt(10000)
+                    + "_"
+                    + pid;
+        }
+        return tmpPath;
+    }
 
 	@Deprecated
 	public void loadHiveLogPath(String logDir, String logFile) {
@@ -277,7 +304,14 @@ public class CanaanConf {
 	public String getCalVariables(String key) {
 		// YYYYMMDD_P1D YYYYMMDD_P1D YYYYMMDD_YESTERDAY YYYYMMDD_DEFAULT_HP_DT
 		String value = "";
-
+        if ("HH".equalsIgnoreCase(key))
+        {
+            String cal_hour =  getCanaanVariables(Constants
+                    .BATCH_COMMON_VARS
+                    .BATCH_TIMESTAMP
+                    .toString());
+            return cal_hour == null?"00":cal_hour;
+        }
 		if ("YYYYMMDD_DEFAULT_HP_DT".equalsIgnoreCase(key))
 			return Constants.DEFAULT_HP_DT;
 
@@ -304,7 +338,6 @@ public class CanaanConf {
 
 			if (v.length > 1) {
 				String s = v[1];
-
 				if (s.toUpperCase().endsWith("TODAY")) {
 					sign = 1;
 					offset = 0;

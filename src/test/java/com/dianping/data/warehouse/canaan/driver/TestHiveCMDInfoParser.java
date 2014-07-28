@@ -6,12 +6,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.dianping.data.warehouse.canaan.common.Constants;
+import com.dianping.data.warehouse.canaan.connector.MySQLConnector;
 import junit.framework.TestCase;
 
 import com.dianping.data.warehouse.canaan.common.HiveCMDInfo;
 import com.dianping.data.warehouse.canaan.common.HiveJobInfo;
 import com.dianping.data.warehouse.canaan.conf.CanaanConf;
-import com.dianping.data.warehouse.canaan.connector.MySQLConnector;
 
 public class TestHiveCMDInfoParser extends TestCase {
 	static ArrayList<HiveCMDInfo> list = new ArrayList<HiveCMDInfo>();
