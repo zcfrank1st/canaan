@@ -37,6 +37,7 @@ import com.dianping.data.warehouse.canaan.util.DateUtils;
 import org.joda.time.DateTime;
 
 import java.util.Date;
+import java.util.regex.Pattern;
 
 /**
  * TODO Comment of OptionParser
@@ -91,8 +92,7 @@ public class OptionParser {
 				HelpFormatter hf = new HelpFormatter();
 				hf.printHelp("Options", options);
 				throw new CanaanPrintHelpException("Print Help");
-			}
-            else {
+			} else {
             	/*
                  * for dol str
                  */
@@ -103,7 +103,7 @@ public class OptionParser {
                 else if (cl.hasOption(Constants.PARAM_IN_STR))
                     map.put(Constants.BATCH_COMMON_VARS.BATCH_DOL_TYPE.toString(),Constants.DOL_TYPE_STR);
                 else map.put(Constants.BATCH_COMMON_VARS.BATCH_DOL_TYPE.toString(),Constants.DOL_TYPE_DOL);
-                
+
 				/*
 				 * load common args
 				 */
@@ -155,7 +155,12 @@ public class OptionParser {
 								throw new ParamNotSupportException("ERROR_DOL_FILENAME");
 							}
 						}
-					}										
+					}
+                    else if(var.equals(Constants.BATCH_COMMON_VARS.BATCH_RECALL_NUM.toString())){
+                        if(value == null){
+                            value = "0";
+                        }
+                    }
 					// System.out.println("-" + key + ": " + val);
 					map.put(Constants.param2ContextVarMapping.get(key), value);
 
@@ -170,7 +175,9 @@ public class OptionParser {
                 else
                 {
                     map.put(Constants.param2ContextVarMapping.get(Constants.PARAM_IN_PRINT),"F");
-                }                               
+                }
+
+
                 
 				/*
 				 * load extended args

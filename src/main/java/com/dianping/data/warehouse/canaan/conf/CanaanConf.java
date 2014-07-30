@@ -59,8 +59,8 @@ public class CanaanConf {
 	
 	/************
 	 * 完成初始化
-	 * @throws FileNotFoundException
-	 * @throws IOException
+	 * @throws java.io.FileNotFoundException
+	 * @throws java.io.IOException
 	 */
 	private void init() throws FileNotFoundException, IOException {
 		loadEnvConf();
@@ -95,8 +95,8 @@ public class CanaanConf {
 	/*************
 	 * 加载配置文件变量
 	 * @param filePath
-	 * @throws FileNotFoundException
-	 * @throws IOException
+	 * @throws java.io.FileNotFoundException
+	 * @throws java.io.IOException
 	 */
 	public void loadDefaultConf(String filePath) throws FileNotFoundException,
 			IOException {

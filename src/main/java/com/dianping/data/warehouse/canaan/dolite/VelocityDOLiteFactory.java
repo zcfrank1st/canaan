@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import com.dianping.data.warehouse.canaan.common.Constants;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.text.StrBuilder;
 import org.apache.velocity.VelocityContext;
@@ -41,6 +42,7 @@ public class VelocityDOLiteFactory implements DOLiteFactory {
 		this.props = props;
 	}
 
+
 	public DOLite produce(String taskId,String fileName, String str)
 			throws ParseErrorException, MethodInvocationException,
 			ResourceNotFoundException, IOException {
@@ -50,7 +52,24 @@ public class VelocityDOLiteFactory implements DOLiteFactory {
 	}
 
 	protected List<String> createStatements() {
-		return Arrays.asList(statementStrings);
+        if(Integer.parseInt(this.props.get(Constants.BATCH_COMMON_VARS.BATCH_RECALL_NUM.toString()).toString())>0){
+            ArrayList<String> adjustList = new ArrayList<String>(Arrays.asList(Constants.OOM_PARA_ADJUST));
+            ArrayList<String> statementsList = new ArrayList<String>(Arrays.asList(statementStrings));
+            for(String statment : statementStrings){
+                if(statment.trim().toLowerCase().startsWith("set ")){
+                   for(String para : Constants.OOM_PARAS){
+                       if(statment.trim().toLowerCase().contains(para)){
+                           statementsList.remove(statment);
+                       }
+                   }
+                }
+            }
+            adjustList.addAll(statementsList);
+            return adjustList;
+        }
+        else{
+            return Arrays.asList(statementStrings);
+        }
 	}
 
 	public String getFileEncoding() {

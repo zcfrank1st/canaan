@@ -63,6 +63,9 @@ public class Constants {
     public static final String PARAM_IN_T = "t";
 	public static final char PARAM_IN_EXT_DELIMITER = '=';
 
+    //add by shanshan.jin;support auto OOM config
+    public static final String PARAM_IN_R = "r";
+
 	public static final String PARAM_IN_DESC_H = "short help";
 	public static final String PARAM_IN_DESC_C = "Caculator name";
 	public static final String PARAM_IN_DESC_DOL = "dol filename";
@@ -78,6 +81,9 @@ public class Constants {
     public static final String PARAM_IN_DESC_P = "product name";
     public static final String PARAM_IN_DESC_T = "timestamp";
 	public static final String PARAM_IN_DESC_EXT_ARG = "paramN=valN";
+
+    //add by shanshan.jin;support auto OOM config
+    public static final String PARAM_IN_DESC_R = "recall number";
 
     public static final String DOL_TYPE_DOL = "FILE";
     public static final String DOL_TYPE_STR = "STR";
@@ -99,6 +105,8 @@ public class Constants {
         Constants.param2DescMapping.put(Constants.PARAM_IN_G, Constants.PARAM_IN_DESC_G);
         Constants.param2DescMapping.put(Constants.PARAM_IN_P, Constants.PARAM_IN_DESC_P);
         Constants.param2DescMapping.put(Constants.PARAM_IN_T, Constants.PARAM_IN_DESC_T);
+        //add by shanshan.jin
+        Constants.param2DescMapping.put(Constants.PARAM_IN_R, Constants.PARAM_IN_DESC_R);
 	}
 
 	public static enum BATCH_SERVERS {
@@ -107,7 +115,7 @@ public class Constants {
 
 	public static enum BATCH_COMMON_VARS {
 		BATCH_CAL_DT, BATCH_DOL, BATCH_CACULATOR, /*BATCH_SERVER, BATCH_USER,*/ CANAAN_HOME, CANAAN_CONF_SUBDIR, CANAAN_CONF_DIR, BATCH_DOL_DIR, BATCH_LOG_DIR, BATCH_MYJAR_DIR, BATCH_HIVE_CLIENT, BATCH_TASK_ID,
-		BATCH_HIVE_INIT_DIR,BATCH_PARSE_ONLY,BATCH_DOL_TYPE,BATCH_DOL_STR,BATCH_GROUP,BATCH_PRODUCT,BATCH_BASE_DOL_DIR,BATCH_TIMESTAMP
+		BATCH_HIVE_INIT_DIR,BATCH_PARSE_ONLY,BATCH_DOL_TYPE,BATCH_DOL_STR,BATCH_GROUP,BATCH_PRODUCT,BATCH_BASE_DOL_DIR,BATCH_TIMESTAMP,BATCH_RECALL_NUM
     }
 
 	public static final String COMMON_VARS_CAL_PREFIX = "CAL_"; /*
@@ -152,6 +160,7 @@ public class Constants {
         Constants.param2ContextVarMapping.put(Constants.PARAM_IN_G, BATCH_COMMON_VARS.BATCH_GROUP.toString());
         Constants.param2ContextVarMapping.put(Constants.PARAM_IN_P, BATCH_COMMON_VARS.BATCH_PRODUCT.toString());
         Constants.param2ContextVarMapping.put(Constants.PARAM_IN_T, BATCH_COMMON_VARS.BATCH_TIMESTAMP.toString());
+        Constants.param2ContextVarMapping.put(Constants.PARAM_IN_R, BATCH_COMMON_VARS.BATCH_RECALL_NUM.toString());
     }
 
 	public static enum BATCH_USERS {
@@ -189,4 +198,7 @@ public class Constants {
 		"!", "list" };
 	public static final String[] NOSQL_PREFIX2 = { "set", "dfs", "add",
 		"delete" };
+    public static final String[] OOM_PARA_ADJUST = { "set hive.map.aggr.hash.percentmemory = 0.125","set hive.map.aggr = false","set hive.exec.reducers.bytes.per.reducer=32000000"};
+
+    public static final String[] OOM_PARAS = { "hive.map.aggr.hash.percentmemory", "hive.map.aggr", "hive.exec.reducers.bytes.per.reducer"};
 }
