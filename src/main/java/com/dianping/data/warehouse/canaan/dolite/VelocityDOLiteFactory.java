@@ -27,133 +27,131 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
 public class VelocityDOLiteFactory implements DOLiteFactory {
-	private String fileEncoding = "utf-8";
-	private File DOLHome = new File("/");
-	private Properties props = new Properties();
-	private StrBuilder template;
-	private String[] statementStrings;
+    private String fileEncoding = "utf-8";
+    private File DOLHome = new File("/");
+    private Properties props = new Properties();
+    private StrBuilder template;
+    private String[] statementStrings;
 
-	public Properties getProps() {
-		return props;
-	}
+    public Properties getProps() {
+        return props;
+    }
 
-	@Inject
-	public void setProps(@Named("props") Properties props) {
-		this.props = props;
-	}
+    @Inject
+    public void setProps(@Named("props") Properties props) {
+        this.props = props;
+    }
 
 
-	public DOLite produce(String taskId,String fileName, String str)
-			throws ParseErrorException, MethodInvocationException,
-			ResourceNotFoundException, IOException {
-		List<String> statements = this.loadTemplateFrom(str)
-				.evaluateWithContext().createStatements();
-		return new DOLiteImpl(taskId, fileName, statements);
-	}
+    public DOLite produce(String taskId, String fileName, String str)
+            throws ParseErrorException, MethodInvocationException,
+            ResourceNotFoundException, IOException {
+        List<String> statements = this.loadTemplateFrom(str)
+                .evaluateWithContext().createStatements();
+        return new DOLiteImpl(taskId, fileName, statements);
+    }
 
-	protected List<String> createStatements() {
-        if(Integer.parseInt(this.props.get(Constants.BATCH_COMMON_VARS.BATCH_RECALL_NUM.toString()).toString())>0){
+    protected List<String> createStatements() {
+        if (Integer.parseInt(this.props.get(Constants.BATCH_COMMON_VARS.BATCH_RECALL_NUM.toString()).toString()) > 0) {
             ArrayList<String> adjustList = new ArrayList<String>(Arrays.asList(Constants.OOM_PARA_ADJUST));
             ArrayList<String> statementsList = new ArrayList<String>(Arrays.asList(statementStrings));
-            for(String statment : statementStrings){
-                if(statment.trim().toLowerCase().startsWith("set ")){
-                   for(String para : Constants.OOM_PARAS){
-                       if(statment.trim().toLowerCase().contains(para)){
-                           statementsList.remove(statment);
-                       }
-                   }
+            for (String statment : statementStrings) {
+                if (statment.trim().toLowerCase().startsWith("set ")) {
+                    for (String para : Constants.OOM_PARAS) {
+                        if (statment.trim().toLowerCase().contains(para)) {
+                            statementsList.remove(statment);
+                        }
+                    }
                 }
             }
             adjustList.addAll(statementsList);
             return adjustList;
-        }
-        else{
+        } else {
             return Arrays.asList(statementStrings);
         }
-	}
+    }
 
-	public String getFileEncoding() {
-		return fileEncoding;
-	}
+    public String getFileEncoding() {
+        return fileEncoding;
+    }
 
-	@Inject
-	public void setFileEncoding(@Named("fileEncoding") String fileEncoding) {
-		this.fileEncoding = fileEncoding;
-	}
+    @Inject
+    public void setFileEncoding(@Named("fileEncoding") String fileEncoding) {
+        this.fileEncoding = fileEncoding;
+    }
 
-	public File getDOLHome() {
-		return DOLHome;
-	}
+    public File getDOLHome() {
+        return DOLHome;
+    }
 
-	@Inject
-	public void setDOLHome(@Named("DOLHome") File DOLHome) {
-		this.DOLHome = DOLHome;
-	}
+    @Inject
+    public void setDOLHome(@Named("DOLHome") File DOLHome) {
+        this.DOLHome = DOLHome;
+    }
 
-	protected Context getContextFromProperties() {
-		Map<String, String> env = new HashMap<String, String>();
-		for (Object key : this.props.keySet()) {
-			env.put(key.toString(), props.get(key).toString());
-		}
-		Context context = new VelocityContext();
-		context.put("env", env);
-		DateTimeContext dtCtx = new DateTimeContext();
-		context.put("dt", dtCtx);
-		return context;
+    protected Context getContextFromProperties() {
+        Map<String, String> env = new HashMap<String, String>();
+        for (Object key : this.props.keySet()) {
+            env.put(key.toString(), props.get(key).toString());
+        }
+        Context context = new VelocityContext();
+        context.put("env", env);
+        DateTimeContext dtCtx = new DateTimeContext();
+        context.put("dt", dtCtx);
+        return context;
 
-	}
+    }
 
-	protected VelocityDOLiteFactory evaluateWithContext()
-			throws ParseErrorException, MethodInvocationException,
-			ResourceNotFoundException, IOException {
-		StringWriter writer = new StringWriter();
-		Velocity.addProperty("runtime.log", "");
-		Velocity.addProperty("file.resource.loader.path",
-				this.DOLHome.toString());
-		Velocity.evaluate(getContextFromProperties(), writer, getClass()
-				.getSimpleName(), this.template.asReader());
-		//对sql中分号转义，参见hive -f 中处理方式
-		ArrayList<String> statementArray = new ArrayList<String>();
-		String command = "";
-		String line = writer.toString();
-		for (String oneCmd : line.split(";")) {
-			if (StringUtils.endsWith(oneCmd, "\\")) {
-				command += oneCmd + ";";
-				continue;
-			} else {
-				command += oneCmd;
-			}
-			if (StringUtils.isBlank(command)) {
-				continue;
-			}
-			statementArray.add(command);
-			command = "";
-		}
+    protected VelocityDOLiteFactory evaluateWithContext()
+            throws ParseErrorException, MethodInvocationException,
+            ResourceNotFoundException, IOException {
+        StringWriter writer = new StringWriter();
+        Velocity.addProperty("runtime.log", "");
+        Velocity.addProperty("file.resource.loader.path",
+                this.DOLHome.toString());
+        Velocity.evaluate(getContextFromProperties(), writer, getClass()
+                .getSimpleName(), this.template.asReader());
+        //对sql中分号转义，参见hive -f 中处理方式
+        ArrayList<String> statementArray = new ArrayList<String>();
+        String command = "";
+        String line = writer.toString();
+        for (String oneCmd : line.split(";")) {
+            if (StringUtils.endsWith(oneCmd, "\\")) {
+                command += oneCmd + ";";
+                continue;
+            } else {
+                command += oneCmd;
+            }
+            if (StringUtils.isBlank(command)) {
+                continue;
+            }
+            statementArray.add(command);
+            command = "";
+        }
 
-		int i = 0;
-		this.statementStrings = new String[statementArray.size()];
-		for (String statement : statementArray) {
-			this.statementStrings[i] = statement.trim();
-			i++;
-		}
+        int i = 0;
+        this.statementStrings = new String[statementArray.size()];
+        for (String statement : statementArray) {
+            this.statementStrings[i] = statement.trim();
+            i++;
+        }
 
-		return this;
+        return this;
 
-	}
+    }
 
-	protected VelocityDOLiteFactory loadTemplateFrom(String str)
-			throws IOException {
-		this.template = new StrBuilder(str);
-		final byte[] bom = new byte[] { (byte) 0xEF, (byte) 0xBB, (byte) 0xBF };
-		if (this.template.toString().startsWith(new String(bom, "UTF8"))) {
-			this.template.delete(0, 1);
-		}
-		String commonVmPath =  "vm" + File.separator + "common.vm";
-		if (new File(this.DOLHome+File.separator+commonVmPath).exists())
-        {
+    protected VelocityDOLiteFactory loadTemplateFrom(String str)
+            throws IOException {
+        this.template = new StrBuilder(str);
+        final byte[] bom = new byte[]{(byte) 0xEF, (byte) 0xBB, (byte) 0xBF};
+        if (this.template.toString().startsWith(new String(bom, "UTF8"))) {
+            this.template.delete(0, 1);
+        }
+        String commonVmPath = "vm" + File.separator + "common.vm";
+        if (new File(this.DOLHome + File.separator + commonVmPath).exists()) {
             String strParseVm = "#parse(\"" + commonVmPath + "\")";
             this.template.insert(0, strParseVm);
         }
-		return this;
-	}
+        return this;
+    }
 }
