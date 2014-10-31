@@ -110,13 +110,13 @@ public class HiveCMDInfoParser {
             tmp_hiveCI.setStatus(2);
             tmp_hiveCI.setStartTime(System.currentTimeMillis());
             fileLog.log(tmp_hiveCI, false);
-//            mysqlLog.log(tmp_hiveCI, false);
+            mysqlLog.log(tmp_hiveCI, false);
             cmdCounter++;
             if (tmp_hiveCI.getIsSQL() == 0) {
                 tmp_hiveCI.setStatus(0);
                 tmp_hiveCI.setFinishTime(System.currentTimeMillis());
                 fileLog.log(tmp_hiveCI, true);
-//                mysqlLog.log(tmp_hiveCI, true);
+                mysqlLog.log(tmp_hiveCI, true);
             } else {
                 mrjobCounter = 0;
                 jobCounter = 0;
@@ -142,11 +142,11 @@ public class HiveCMDInfoParser {
             hiveCI.setStatus(1);
             hiveCI.setFinishTime(System.currentTimeMillis());
             fileLog.log(this.hiveCI, true);
-//            mysqlLog.log(this.hiveCI, true);
+            mysqlLog.log(this.hiveCI, true);
             if (hiveJI != null) {
                 hiveJI.setStatus(1);
                 hiveJI.setRetInfo(this.failInfo.toString().trim());
-//                mysqlLog.log(hiveJI, MySQLHiveLog.JOB_STAGE.JOB_END.ordinal());
+                mysqlLog.log(hiveJI, MySQLHiveLog.JOB_STAGE.JOB_END.ordinal());
             }
         }
         this.mysqlLog.destroy("");
@@ -208,7 +208,7 @@ public class HiveCMDInfoParser {
             if (hiveCI == null)
                 return;
             fileLog.log(this.hiveCI, true);
-//            mysqlLog.log(this.hiveCI, true);
+            mysqlLog.log(this.hiveCI, true);
             hiveCI = getNextHiveCMDInfo();
         } else if ((m = getMatcher(
                 HIVECMD_INFO_PREFIX.get(HIVECMD_INFO_PREFIX_KEY.HIVECMD_JOB_CNT
@@ -233,7 +233,7 @@ public class HiveCMDInfoParser {
             if (tmpMatcher.find()) {
                 String jobId = tmpMatcher.group(1);
                 hiveCI.getJob(jobId).setJobKillCMD(m.group(1));
-//                mysqlLog.log(hiveCI.getJob(jobId), MySQLHiveLog.JOB_STAGE.MR_JOB_START.ordinal());
+                mysqlLog.log(hiveCI.getJob(jobId), MySQLHiveLog.JOB_STAGE.MR_JOB_START.ordinal());
             }
         } else if (((m = getMatcher(
                 JOB_INFO_PREFIX.get(JOB_INFO_PREFIX_KEY.JOB_MAPR_INFO
@@ -242,7 +242,7 @@ public class HiveCMDInfoParser {
                     Integer.parseInt(m.group(1)));
             hiveCI.getJob(jobCounter).setReducerNumber(
                     Integer.parseInt(m.group(2)));
-//            mysqlLog.log(hiveJI, MySQLHiveLog.JOB_STAGE.MR_JOB_MR_INFO.ordinal());
+            mysqlLog.log(hiveJI, MySQLHiveLog.JOB_STAGE.MR_JOB_MR_INFO.ordinal());
         } else if (((m = getMatcher(
                 JOB_INFO_PREFIX.get(JOB_INFO_PREFIX_KEY.JOB_END.toString()),
                 line)).find())) {
@@ -250,7 +250,7 @@ public class HiveCMDInfoParser {
             if (hiveCI.getJob(jobID) != null) {
                 hiveCI.getJob(jobID).setJobFinishTime(getTimeMillis(time));
                 hiveCI.getJob(jobID).setStatus(0);
-//                mysqlLog.log(hiveCI.getJob(jobID), MySQLHiveLog.JOB_STAGE.MR_JOB_END.ordinal());
+                mysqlLog.log(hiveCI.getJob(jobID), MySQLHiveLog.JOB_STAGE.MR_JOB_END.ordinal());
             } else {
                 jobCounter++;
                 hiveJI = new HiveJobInfo(jobCounter);
@@ -259,7 +259,7 @@ public class HiveCMDInfoParser {
                 hiveJI.setJobFinishTime(getTimeMillis(time));
                 hiveJI.setIsMapReduce(0);
                 hiveCI.addJob(hiveJI);
-//                mysqlLog.log(hiveJI, MySQLHiveLog.JOB_STAGE.NONMR_JOB_START.ordinal());
+                mysqlLog.log(hiveJI, MySQLHiveLog.JOB_STAGE.NONMR_JOB_START.ordinal());
             }
         } else if (((m = getMatcher(
                 JOB_INFO_PREFIX
@@ -275,7 +275,7 @@ public class HiveCMDInfoParser {
                     Long.parseLong(m.group(1)));
             hiveCI.getMRJob(mrjobCounter).setHDFSWrite(
                     Long.parseLong(m.group(2)));
-//            mysqlLog.log(hiveCI.getMRJob(mrjobCounter), MySQLHiveLog.JOB_STAGE.MR_JOB_HDFS_INFO.ordinal());
+            mysqlLog.log(hiveCI.getMRJob(mrjobCounter), MySQLHiveLog.JOB_STAGE.MR_JOB_HDFS_INFO.ordinal());
         }
     }
 }

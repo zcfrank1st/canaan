@@ -15,7 +15,7 @@
 <entry key="BATCH_MYJAR_DIR">${CANAAN_HOME}/myjar</entry>
 <entry key="BATCH_HIVE_CLIENT">${HIVE_HOME}/bin/hive</entry>
 <entry key="BATCH_HIVE_INIT_DIR">${CANAAN_HOME}/init</entry>
-<entry key="MYSQL_LOGIN_SWITCH">on</entry>
+<entry key="MYSQL_LOGIN_SWITCH">off</entry>
 <entry key="MYSQL_LOGIN_USERNAME">DianPingDW</entry>
 <entry key="MYSQL_LOGIN_PASSWORD">Diand32adjl3dvDW</entry>
 <entry key="MYSQL_LOGIN_HOST">10.1.1.220</entry>
