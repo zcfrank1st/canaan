@@ -117,14 +117,15 @@ public class VelocityDOLiteFactory implements DOLiteFactory {
             return null;
         }
         InstanceService instanceService = null; // 获取远程服务代理
+        InstanceDisplayDO instance = null;
         try {
             instanceService = ServiceFactory.getService(InstanceService.class, 5000);
+            instance = instanceService.getInstanceByInstanceId(instId.toString());
         } catch (Exception e) {
-            logger.error("get pigeon service fails: " + e.toString());
+            logger.error("pigeon service fails: " + e.toString());
             e.printStackTrace();
             return null;
         }
-        InstanceDisplayDO instance = instanceService.getInstanceByInstanceId(instId.toString());
         if (instance == null || instance.getJobCode() == null)
             return null;
         return instance.getJobCode().toString();
