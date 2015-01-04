@@ -11,6 +11,10 @@ import java.util.Map;
 import java.util.Properties;
 
 import com.dianping.data.warehouse.canaan.common.Constants;
+import com.dianping.data.warehouse.halley.domain.InstanceDisplayDO;
+import com.dianping.data.warehouse.halley.service.InstanceService;
+import com.dianping.pigeon.remoting.ServiceFactory;
+import com.dianping.pigeon.remoting.common.exception.RpcException;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.text.StrBuilder;
 import org.apache.velocity.VelocityContext;
@@ -25,8 +29,12 @@ import org.apache.commons.io.FilenameUtils;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class VelocityDOLiteFactory implements DOLiteFactory {
+    Logger logger = LoggerFactory.getLogger(VelocityDOLiteFactory.class);
+
     private String fileEncoding = "utf-8";
     private File DOLHome = new File("/");
     private Properties props = new Properties();
@@ -52,24 +60,75 @@ public class VelocityDOLiteFactory implements DOLiteFactory {
     }
 
     protected List<String> createStatements() {
-        if (Integer.parseInt(this.props.get(Constants.BATCH_COMMON_VARS.BATCH_RECALL_NUM.toString()).toString()) > 0) {
+        ArrayList<String> statements = new ArrayList<String>(Arrays.asList(statementStrings));
+        if (!needAdjustOOM()) {
+            logger.error("not add oom parameter");
+            return statements;
+        }
+        return addOOMStatements(statements);
+    }
+
+    /**
+     * 加入OOM调整参数
+     */
+    private List<String> addOOMStatements(List<String> statements) {
+        logger.error("add oom parameter");
+        if (this.props.get(Constants.BATCH_COMMON_VARS.BATCH_INST_ID.toString()) != null) {
             ArrayList<String> adjustList = new ArrayList<String>(Arrays.asList(Constants.OOM_PARA_ADJUST));
-            ArrayList<String> statementsList = new ArrayList<String>(Arrays.asList(statementStrings));
             for (String statment : statementStrings) {
                 if (statment.trim().toLowerCase().startsWith("set ")) {
                     for (String para : Constants.OOM_PARAS) {
                         if (statment.trim().toLowerCase().contains(para)) {
-                            statementsList.remove(statment);
+                            statements.remove(statment);
                         }
                     }
                 }
             }
-            adjustList.addAll(statementsList);
-            return adjustList;
-        } else {
-            return Arrays.asList(statementStrings);
+            statements.addAll(adjustList);
         }
+        logger.error(statements.toString());
+        return statements;
     }
+
+    /**
+     * 是否需要加入OOM调整参数
+     */
+    private boolean needAdjustOOM() {
+        String codes = this.props.get(Constants.BATCH_COMMON_VARS.OOM_NOT_ADJUST_CODE.toString()).toString();
+        if (codes == null)
+            return false;
+        String notAdjustOOMCodes[] = codes.split(",");
+        String jobCode = getJobCode();
+        if (jobCode == null)
+            return false;
+        for (String code : notAdjustOOMCodes) {
+            if (jobCode.equals(code))
+                return false;
+        }
+        return true;
+    }
+
+    /**
+     * 获得实例的jobcode
+     */
+    private String getJobCode() {
+        Object instId = this.props.get(Constants.BATCH_COMMON_VARS.BATCH_INST_ID.toString());
+        if (instId == null) {
+            return null;
+        }
+        InstanceService instanceService = null; // 获取远程服务代理
+        try {
+            instanceService = ServiceFactory.getService(InstanceService.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        InstanceDisplayDO instance = instanceService.getInstanceByInstanceId(instId.toString());
+        if (instance == null)
+            return null;
+        return instance.getJobCode().toString();
+    }
+
 
     public String getFileEncoding() {
         return fileEncoding;
