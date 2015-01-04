@@ -152,21 +152,6 @@ public class OptionParser {
                             }
                         }
                     }
-//                    } else if (var.equals(Constants.BATCH_COMMON_VARS.BATCH_RECALL_NUM.toString())) {
-//                        if (value == null) {
-//                            value = "0";
-//                        }
-//                    } else if (var.equals(Constants.BATCH_COMMON_VARS.BATCH_INST_ID.toString())) {
-//                        if (value == null) {
-//                            value = "0";
-////                            InstanceService instanceService = ServiceFactory.getService(InstanceService.class); // 获取远程服务代理
-////                            InstanceDisplayDO instance = instanceService.getInstanceByInstanceId(value);
-////                            if (instance == null)
-////                                value = null;
-////                            else
-////                                value = instance.getJobCode().toString();
-//                        }
-//                    }
                     // System.out.println("-" + key + ": " + val);
                     map.put(Constants.param2ContextVarMapping.get(key), value);
 

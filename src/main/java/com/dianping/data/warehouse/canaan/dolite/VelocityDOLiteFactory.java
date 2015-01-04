@@ -62,7 +62,6 @@ public class VelocityDOLiteFactory implements DOLiteFactory {
     protected List<String> createStatements() {
         ArrayList<String> statements = new ArrayList<String>(Arrays.asList(statementStrings));
         if (!needAdjustOOM()) {
-            logger.error("not add oom parameter");
             return statements;
         }
         return addOOMStatements(statements);
@@ -72,7 +71,6 @@ public class VelocityDOLiteFactory implements DOLiteFactory {
      * 加入OOM调整参数
      */
     private List<String> addOOMStatements(List<String> statements) {
-        logger.error("add oom parameter");
         if (this.props.get(Constants.BATCH_COMMON_VARS.BATCH_INST_ID.toString()) != null) {
             ArrayList<String> adjustList = new ArrayList<String>(Arrays.asList(Constants.OOM_PARA_ADJUST));
             for (String statment : statementStrings) {
@@ -118,13 +116,13 @@ public class VelocityDOLiteFactory implements DOLiteFactory {
         }
         InstanceService instanceService = null; // 获取远程服务代理
         try {
-            instanceService = ServiceFactory.getService(InstanceService.class);
+            instanceService = ServiceFactory.getService(InstanceService.class, 5000);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
         InstanceDisplayDO instance = instanceService.getInstanceByInstanceId(instId.toString());
-        if (instance == null)
+        if (instance == null || instance.getJobCode() == null)
             return null;
         return instance.getJobCode().toString();
     }
