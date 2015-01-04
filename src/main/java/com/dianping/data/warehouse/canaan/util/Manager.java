@@ -92,7 +92,7 @@ public class Manager {
         for (int i = 1; i <= dolite.size(); i++) {
             logger.info("line" + i + ":" + dolite.get(i).trim());
             if (isPrint)
-                System.out.println(dolite.get(i).trim()+";");
+                System.out.println(dolite.get(i).trim() + ";");
         }
         conf.setDOLite(dolite);
         logger.info("DOLParser Ends");
@@ -104,13 +104,13 @@ public class Manager {
         //得到上下游关系和hive sql，并且持久化到AnalyzeResult
         sqlParser.parse();
         //将上下游关系插入数据库
-        sqlParser.persist();     
+        sqlParser.persist();
         logger.info(sqlParser.toString());
         logger.info("SQLParser Ends");
     }
 
     private int execute() throws Exception {
-        logger.info("Executor Begins");       
+        logger.info("Executor Begins");
         String classType = conf
                 .getCanaanVariables(Constants.BATCH_COMMON_VARS.BATCH_CACULATOR
                         .toString());
@@ -123,9 +123,10 @@ public class Manager {
                         conf.getCanaanVariables(Constants.BATCH_COMMON_VARS.BATCH_HIVE_INIT_DIR
                                 .toString()),
                         Constants.BATCH_COMMON_VARS.CANAAN_HOME.toString() + "=" + conf.getCanaanVariables(Constants.BATCH_COMMON_VARS.CANAAN_HOME.toString())
-                        , conf.getHiveTmpPath());
+                        , conf.getHiveTmpPath()
+                );
         Executor executor = new Executor(calculator);
-        executor.setDOLite(conf.getDOLite());        
+        executor.setDOLite(conf.getDOLite());
         int retCode = executor.execute();
         logger.info("Executor Ends");
         return retCode;
@@ -139,8 +140,8 @@ public class Manager {
         init();
         Properties p = parseOption();
         boolean parseOnly = p.getProperty(Constants.BATCH_COMMON_VARS.BATCH_PARSE_ONLY.toString()).equals("T");
-        parseDOL(parseOnly);        
-        parseSQL();        
+        parseDOL(parseOnly);
+        parseSQL();
         int status = 0;
         if (!parseOnly)
             status = execute();

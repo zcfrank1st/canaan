@@ -21,4 +21,5 @@
 <entry key="MYSQL_LOGIN_HOST">10.1.1.220</entry>
 <entry key="MYSQL_LOGIN_PORT">3306</entry>
 <entry key="MYSQL_LOGIN_DATABASE">DianPingDW</entry>
+<entry key="OOM_NOT_ADJUST_CODE">30</entry>
 </properties>
