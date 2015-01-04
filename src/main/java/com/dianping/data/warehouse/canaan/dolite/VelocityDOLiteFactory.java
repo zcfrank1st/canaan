@@ -62,8 +62,10 @@ public class VelocityDOLiteFactory implements DOLiteFactory {
     protected List<String> createStatements() {
         ArrayList<String> statements = new ArrayList<String>(Arrays.asList(statementStrings));
         if (!needAdjustOOM()) {
+            logger.info("not add oom parameter");
             return statements;
         }
+        logger.info("add oom parameter");
         return addOOMStatements(statements);
     }
 
@@ -83,8 +85,8 @@ public class VelocityDOLiteFactory implements DOLiteFactory {
                 }
             }
             statements.addAll(adjustList);
+            logger.info("oom parameters added, " + statements.toString());
         }
-        logger.error(statements.toString());
         return statements;
     }
 
@@ -118,6 +120,7 @@ public class VelocityDOLiteFactory implements DOLiteFactory {
         try {
             instanceService = ServiceFactory.getService(InstanceService.class, 5000);
         } catch (Exception e) {
+            logger.error("get pigeon service fails: " + e.toString());
             e.printStackTrace();
             return null;
         }
