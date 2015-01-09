@@ -199,7 +199,7 @@ public class Constants {
     public static final String[] NOSQL_PREFIX2 = {"set", "dfs", "add",
             "delete"};
 
-    public static final String[] OOM_PARA_ADJUST = {"set hive.map.aggr.hash.percentmemory = 0.125",
+    public static final String[] OOM_PARA_ADJUST = {"use bi", "set hive.map.aggr.hash.percentmemory = 0.125",
             "set hive.exec.reducers.bytes.per.reducer=32000000", "set mapreduce.map.memory.mb = 3072",
             "set mapreduce.map.java.opts=\"-Djava.net.preferIPv4Stack=true -Xmx2800m\"", "set mapreduce.reduce.memory.mb = 4096",
             "set mapreduce.reduce.java.opts=\"-Djava.net.preferIPv4Stack=true -Xmx3600m\""
