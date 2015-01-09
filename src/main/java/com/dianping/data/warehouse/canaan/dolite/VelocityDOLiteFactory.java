@@ -75,17 +75,19 @@ public class VelocityDOLiteFactory implements DOLiteFactory {
     private List<String> addOOMStatements(List<String> statements) {
         if (this.props.get(Constants.BATCH_COMMON_VARS.BATCH_INST_ID.toString()) != null) {
             ArrayList<String> adjustList = new ArrayList<String>(Arrays.asList(Constants.OOM_PARA_ADJUST));
-            for (String statment : statementStrings) {
-                if (statment.trim().toLowerCase().startsWith("set ")) {
-                    for (String para : Constants.OOM_PARAS) {
-                        if (statment.trim().toLowerCase().contains(para)) {
-                            statements.remove(statment);
-                        }
-                    }
-                }
-            }
-            statements.addAll(adjustList);
+            adjustList.addAll(statements);
             logger.info("oom parameters added, " + statements.toString());
+            return adjustList;
+//            for (String statement : statementStrings) {
+//                if (statement.trim().toLowerCase().startsWith("set ")) {
+//                    for (String para : Constants.OOM_PARAS) {
+//                        if (statement.trim().toLowerCase().contains(para)) {
+//                            statements.remove(statement);
+//                        }
+//                    }
+//                }
+//            }
+//            statements.addAll(adjustList);
         }
         return statements;
     }
@@ -94,24 +96,35 @@ public class VelocityDOLiteFactory implements DOLiteFactory {
      * 是否需要加入OOM调整参数
      */
     private boolean needAdjustOOM() {
+        InstanceDisplayDO instance = getInstance();
+        if (instance == null)
+            return false;
+        if (instance.getRunNum() == 0)
+            return false;
+        if (instance.getJobCode() == null || instance.getJobCode() == -1)
+            return false;
+        return needAdjustOOMByJobCode(instance.getJobCode().toString().trim());
+    }
+
+    /**
+     * 根据jobCode判断是否加入OOM调整参数
+     */
+    private boolean needAdjustOOMByJobCode(String jobCode) {
         String codes = this.props.get(Constants.BATCH_COMMON_VARS.OOM_NOT_ADJUST_CODE.toString()).toString();
         if (codes == null)
             return false;
         String notAdjustOOMCodes[] = codes.split(",");
-        String jobCode = getJobCode();
-        if (jobCode == null)
-            return false;
         for (String code : notAdjustOOMCodes) {
-            if (jobCode.equals(code))
+            if (jobCode.equals(code.trim()))
                 return false;
         }
         return true;
     }
 
     /**
-     * 获得实例的jobcode
+     * 获得任务实例信息
      */
-    private String getJobCode() {
+    private InstanceDisplayDO getInstance() {
         Object instId = this.props.get(Constants.BATCH_COMMON_VARS.BATCH_INST_ID.toString());
         if (instId == null) {
             return null;
@@ -126,11 +139,8 @@ public class VelocityDOLiteFactory implements DOLiteFactory {
             e.printStackTrace();
             return null;
         }
-        if (instance == null || instance.getJobCode() == null)
-            return null;
-        return instance.getJobCode().toString();
+        return instance;
     }
-
 
     public String getFileEncoding() {
         return fileEncoding;
