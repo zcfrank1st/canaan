@@ -75,17 +75,19 @@ public class VelocityDOLiteFactory implements DOLiteFactory {
     private List<String> addOOMStatements(List<String> statements) {
         if (this.props.get(Constants.BATCH_COMMON_VARS.BATCH_INST_ID.toString()) != null) {
             ArrayList<String> adjustList = new ArrayList<String>(Arrays.asList(Constants.OOM_PARA_ADJUST));
-            for (String statment : statementStrings) {
-                if (statment.trim().toLowerCase().startsWith("set ")) {
-                    for (String para : Constants.OOM_PARAS) {
-                        if (statment.trim().toLowerCase().contains(para)) {
-                            statements.remove(statment);
-                        }
-                    }
-                }
-            }
-            statements.addAll(adjustList);
+            adjustList.addAll(statements);
             logger.info("oom parameters added, " + statements.toString());
+            return adjustList;
+//            for (String statement : statementStrings) {
+//                if (statement.trim().toLowerCase().startsWith("set ")) {
+//                    for (String para : Constants.OOM_PARAS) {
+//                        if (statement.trim().toLowerCase().contains(para)) {
+//                            statements.remove(statement);
+//                        }
+//                    }
+//                }
+//            }
+//            statements.addAll(adjustList);
         }
         return statements;
     }
