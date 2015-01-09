@@ -201,8 +201,8 @@ public class Constants {
 
     public static final String[] OOM_PARA_ADJUST = {"use bi", "set hive.map.aggr.hash.percentmemory = 0.125",
             "set hive.exec.reducers.bytes.per.reducer=32000000", "set mapreduce.map.memory.mb = 3072",
-            "set mapreduce.map.java.opts=\"-Djava.net.preferIPv4Stack=true -Xmx2800m\"", "set mapreduce.reduce.memory.mb = 4096",
-            "set mapreduce.reduce.java.opts=\"-Djava.net.preferIPv4Stack=true -Xmx3600m\""
+            "set mapreduce.map.java.opts = -Djava.net.preferIPv4Stack=true -Xmx2800m", "set mapreduce.reduce.memory.mb = 4096",
+            "set mapreduce.reduce.java.opts = -Djava.net.preferIPv4Stack=true -Xmx3600m"
     };
 
     public static final String[] OOM_PARAS = {"hive.map.aggr.hash.percentmemory", "hive.exec.reducers.bytes.per.reducer",
