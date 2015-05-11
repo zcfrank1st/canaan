@@ -14,7 +14,6 @@ import com.dianping.data.warehouse.canaan.common.Constants;
 import com.dianping.data.warehouse.halley.domain.InstanceDisplayDO;
 import com.dianping.data.warehouse.halley.service.InstanceService;
 import com.dianping.pigeon.remoting.ServiceFactory;
-import com.dianping.pigeon.remoting.common.exception.RpcException;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.text.StrBuilder;
 import org.apache.velocity.VelocityContext;
@@ -24,8 +23,6 @@ import org.apache.velocity.exception.MethodInvocationException;
 import org.apache.velocity.exception.ParseErrorException;
 import org.apache.velocity.exception.ResourceNotFoundException;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
@@ -60,59 +57,55 @@ public class VelocityDOLiteFactory implements DOLiteFactory {
     }
 
     protected List<String> createStatements() {
-        ArrayList<String> statements = new ArrayList<String>(Arrays.asList(statementStrings));
-        if (!needAdjustOOM()) {
-            logger.info("not add oom parameter");
+        List<String> statements = new ArrayList<String>(Arrays.asList(statementStrings));
+        return addParameters(statements);
+    }
+
+    private List<String> addParameters(List<String> statements) {
+        InstanceDisplayDO instance = getInstance();
+        if (instance == null)
             return statements;
-        }
-        logger.info("add oom parameter");
-        return addOOMStatements(statements);
+        statements = addInstanceInfo(statements, instance);
+        statements = addOOMStatements(statements, instance);
+        return statements;
+    }
+
+    /**
+     * 设置任务实例的相关信息
+     */
+    private List<String> addInstanceInfo(List<String> statements, InstanceDisplayDO instance) {
+        String TASKID_PARA = "set galaxy.taskId=" + instance.getTaskId();
+        String INSTANCEID_PARA = "set galaxy.instanceId=" + instance.getTaskStatusId();
+        String RUNNUMBER_PARA = "set galaxy.runNumber=" + instance.getRunNum();
+        statements.add(0, RUNNUMBER_PARA);
+        statements.add(0, INSTANCEID_PARA);
+        statements.add(0, TASKID_PARA);
+        return statements;
     }
 
     /**
      * 加入OOM调整参数
      */
-    private List<String> addOOMStatements(List<String> statements) {
-        if (this.props.get(Constants.BATCH_COMMON_VARS.BATCH_INST_ID.toString()) != null) {
-            ArrayList<String> adjustList = new ArrayList<String>(Arrays.asList(Constants.OOM_PARA_ADJUST));
-            adjustList.addAll(statements);
-            logger.info("oom parameters added, " + statements.toString());
-            return adjustList;
-//            for (String statement : statementStrings) {
-//                if (statement.trim().toLowerCase().startsWith("set ")) {
-//                    for (String para : Constants.OOM_PARAS) {
-//                        if (statement.trim().toLowerCase().contains(para)) {
-//                            statements.remove(statement);
-//                        }
-//                    }
-//                }
-//            }
-//            statements.addAll(adjustList);
-        }
-        return statements;
-    }
-
-    /**
-     * 是否需要加入OOM调整参数
-     */
-    private boolean needAdjustOOM() {
-        InstanceDisplayDO instance = getInstance();
-        if (instance == null)
-            return false;
-        if (instance.getRunNum() == 0)
-            return false;
-        if (instance.getJobCode() == null || instance.getJobCode() == -1)
-            return false;
-        return needAdjustOOMByJobCode(instance.getJobCode().toString().trim());
+    private List<String> addOOMStatements(List<String> statements, InstanceDisplayDO instance) {
+        if (instance.getRunNum() == null || instance.getRunNum() < 2)
+            return statements;
+        if (instance.getJobCode() == null)
+            return statements;
+        if (!needAdjustOOM(instance.getJobCode().toString().trim()))
+            return statements;
+        ArrayList<String> adjustList = new ArrayList<String>(Arrays.asList(Constants.OOM_PARA_ADJUST));
+        adjustList.addAll(statements);
+        logger.info("oom parameters added, " + adjustList.toString());
+        return adjustList;
     }
 
     /**
      * 根据jobCode判断是否加入OOM调整参数
      */
-    private boolean needAdjustOOMByJobCode(String jobCode) {
+    private boolean needAdjustOOM(String jobCode) {
         String codes = this.props.get(Constants.BATCH_COMMON_VARS.OOM_NOT_ADJUST_CODE.toString()).toString();
         if (codes == null)
-            return false;
+            return true;
         String notAdjustOOMCodes[] = codes.split(",");
         for (String code : notAdjustOOMCodes) {
             if (jobCode.equals(code.trim()))
