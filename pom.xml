@@ -194,13 +194,4 @@
         </dependency>
     </dependencies>
 
-    <!--
-    <distributionManagement>
-        <snapshotRepository>
-            <id>dianping.repo.snapshots</id>
-            <name>internal corporate snapshots repository</name>
-            <url>http://192.168.8.45:8080/artifactory/dianping-snapshots</url>
-        </snapshotRepository>
-    </distributionManagement>
-     -->
 </project>
