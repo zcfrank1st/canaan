@@ -6,6 +6,7 @@ import java.util.Properties;
 
 import com.dianping.data.warehouse.canaan.common.Constants;
 import com.dianping.data.warehouse.canaan.conf.CanaanConf;
+import com.dianping.data.warehouse.canaan.dolite.VelocityDOLiteFactory;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -14,7 +15,7 @@ import com.google.inject.name.Names;
 
 import com.dianping.data.warehouse.canaan.dolite.DOLite;
 import com.dianping.data.warehouse.canaan.dolite.DOLiteFactory;
-import com.dianping.data.warehouse.canaan.dolite.VelocityDOLiteFactory;
+//import com.dianping.data.warehouse.canaan.dolite.VelocityDOLiteFactory;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.hsqldb.lib.StringUtil;
@@ -76,10 +77,10 @@ public class DOLParser extends AbstractModule {
 		this.props = canaanConf.getCanaanProperties();
 	}
 
-	public DOLite getDOLite() throws Exception {		
+	public DOLite getDOLite() throws Exception {
 		Injector injector = Guice.createInjector(new Module[] { this });
 		DOLiteFactory factory = (DOLiteFactory) injector.getInstance(DOLiteFactory.class);
-		dolite = factory.produce(taskId, fileName,str);		
+		dolite = factory.produce(fileName,str);
 		return dolite;
 	}
 }

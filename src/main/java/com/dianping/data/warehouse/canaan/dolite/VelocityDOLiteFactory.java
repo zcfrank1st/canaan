@@ -11,9 +11,9 @@ import java.util.Map;
 import java.util.Properties;
 
 import com.dianping.data.warehouse.canaan.common.Constants;
-import com.dianping.data.warehouse.halley.domain.InstanceDisplayDO;
-import com.dianping.data.warehouse.halley.service.InstanceService;
-import com.dianping.pigeon.remoting.ServiceFactory;
+//import com.dianping.data.warehouse.halley.domain.InstanceDisplayDO;
+//import com.dianping.data.warehouse.halley.service.InstanceService;
+//import com.dianping.pigeon.remoting.ServiceFactory;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.text.StrBuilder;
 import org.apache.velocity.VelocityContext;
@@ -48,56 +48,56 @@ public class VelocityDOLiteFactory implements DOLiteFactory {
     }
 
 
-    public DOLite produce(String taskId, String fileName, String str)
+    public DOLite produce(String fileName, String str)
             throws ParseErrorException, MethodInvocationException,
             ResourceNotFoundException, IOException {
         List<String> statements = this.loadTemplateFrom(str)
                 .evaluateWithContext().createStatements();
-        return new DOLiteImpl(taskId, fileName, statements);
+        return new DOLiteImpl(fileName, statements);
     }
 
     protected List<String> createStatements() {
         List<String> statements = new ArrayList<String>(Arrays.asList(statementStrings));
-        return addParameters(statements);
-    }
-
-    private List<String> addParameters(List<String> statements) {
-        InstanceDisplayDO instance = getInstance();
-        if (instance == null)
-            return statements;
-        statements = addInstanceInfo(statements, instance);
-        statements = addOOMStatements(statements, instance);
         return statements;
     }
 
-    /**
-     * 设置任务实例的相关信息
-     */
-    private List<String> addInstanceInfo(List<String> statements, InstanceDisplayDO instance) {
-        String TASKID_PARA = "set galaxy.taskId=" + instance.getTaskId();
-        String INSTANCEID_PARA = "set galaxy.instanceId=" + instance.getTaskStatusId();
-        String RUNNUMBER_PARA = "set galaxy.runNumber=" + instance.getRunNum();
-        statements.add(0, RUNNUMBER_PARA);
-        statements.add(0, INSTANCEID_PARA);
-        statements.add(0, TASKID_PARA);
-        return statements;
-    }
+//    private List<String> addParameters(List<String> statements) {
+//        InstanceDisplayDO instance = getInstance();
+//        if (instance == null)
+//            return statements;
+//        statements = addInstanceInfo(statements, instance);
+//        statements = addOOMStatements(statements, instance);
+//        return statements;
+//    }
+
+//    /**
+//     * 设置任务实例的相关信息
+//     */
+//    private List<String> addInstanceInfo(List<String> statements, InstanceDisplayDO instance) {
+//        String TASKID_PARA = "set galaxy.taskId=" + instance.getTaskId();
+//        String INSTANCEID_PARA = "set galaxy.instanceId=" + instance.getTaskStatusId();
+//        String RUNNUMBER_PARA = "set galaxy.runNumber=" + instance.getRunNum();
+//        statements.add(0, RUNNUMBER_PARA);
+//        statements.add(0, INSTANCEID_PARA);
+//        statements.add(0, TASKID_PARA);
+//        return statements;
+//    }
 
     /**
      * 加入OOM调整参数
      */
-    private List<String> addOOMStatements(List<String> statements, InstanceDisplayDO instance) {
-        if (instance.getRunNum() == null || instance.getRunNum() < 2)
-            return statements;
-        if (instance.getJobCode() == null)
-            return statements;
-        if (!needAdjustOOM(instance.getJobCode().toString().trim()))
-            return statements;
-        ArrayList<String> adjustList = new ArrayList<String>(Arrays.asList(Constants.OOM_PARA_ADJUST));
-        adjustList.addAll(statements);
-        logger.info("oom parameters added, " + adjustList.toString());
-        return adjustList;
-    }
+//    private List<String> addOOMStatements(List<String> statements, InstanceDisplayDO instance) {
+//        if (instance.getRunNum() == null || instance.getRunNum() < 2)
+//            return statements;
+//        if (instance.getJobCode() == null)
+//            return statements;
+//        if (!needAdjustOOM(instance.getJobCode().toString().trim()))
+//            return statements;
+//        ArrayList<String> adjustList = new ArrayList<String>(Arrays.asList(Constants.OOM_PARA_ADJUST));
+//        adjustList.addAll(statements);
+//        logger.info("oom parameters added, " + adjustList.toString());
+//        return adjustList;
+//    }
 
     /**
      * 根据jobCode判断是否加入OOM调整参数
@@ -117,23 +117,23 @@ public class VelocityDOLiteFactory implements DOLiteFactory {
     /**
      * 获得任务实例信息
      */
-    private InstanceDisplayDO getInstance() {
-        Object instId = this.props.get(Constants.BATCH_COMMON_VARS.BATCH_INST_ID.toString());
-        if (instId == null) {
-            return null;
-        }
-        InstanceService instanceService = null; // 获取远程服务代理
-        InstanceDisplayDO instance = null;
-        try {
-            instanceService = ServiceFactory.getService(InstanceService.class, 5000);
-            instance = instanceService.getInstanceByInstanceId(instId.toString());
-        } catch (Exception e) {
-            logger.error("pigeon service fails: " + e.toString());
-            e.printStackTrace();
-            return null;
-        }
-        return instance;
-    }
+//    private InstanceDisplayDO getInstance() {
+//        Object instId = this.props.get(Constants.BATCH_COMMON_VARS.BATCH_INST_ID.toString());
+//        if (instId == null) {
+//            return null;
+//        }
+//        InstanceService instanceService = null; // 获取远程服务代理
+//        InstanceDisplayDO instance = null;
+//        try {
+//            instanceService = ServiceFactory.getService(InstanceService.class, 5000);
+//            instance = instanceService.getInstanceByInstanceId(instId.toString());
+//        } catch (Exception e) {
+//            logger.error("pigeon service fails: " + e.toString());
+//            e.printStackTrace();
+//            return null;
+//        }
+//        return instance;
+//    }
 
     public String getFileEncoding() {
         return fileEncoding;
@@ -201,7 +201,6 @@ public class VelocityDOLiteFactory implements DOLiteFactory {
         }
 
         return this;
-
     }
 
     protected VelocityDOLiteFactory loadTemplateFrom(String str)

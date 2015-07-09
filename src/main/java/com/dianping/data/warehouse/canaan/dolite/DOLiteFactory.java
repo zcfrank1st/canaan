@@ -7,13 +7,13 @@ package com.dianping.data.warehouse.canaan.dolite;
 public interface DOLiteFactory {
 	/**
 	 * Produce HQLite
-     * @param ID
+     *
      * @param fileName
 	 * @param str
 	 * @return
 	 * @throws Exception
 	 * 
 	 */
-	  public abstract DOLite produce(String ID,String fileName,String str)
+	  public abstract DOLite produce(String fileName,String str)
 			    throws Exception;
 }

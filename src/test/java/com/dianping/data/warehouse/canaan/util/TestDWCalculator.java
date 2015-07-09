@@ -13,7 +13,7 @@ import junit.framework.TestCase;
 
 public class TestDWCalculator extends TestCase {
     static List<String> stringList = new ArrayList<String>();
-    static DOLite doLite = new DOLiteImpl(null, "test_b", stringList);
+    static DOLite doLite = new DOLiteImpl("test_b", stringList);
 
     public void testCalculate() throws Exception {
 

@@ -22,9 +22,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-import com.dianping.data.warehouse.halley.domain.InstanceDisplayDO;
-import com.dianping.data.warehouse.halley.service.InstanceService;
-import com.dianping.pigeon.remoting.ServiceFactory;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.HelpFormatter;

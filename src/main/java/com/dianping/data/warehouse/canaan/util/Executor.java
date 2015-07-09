@@ -23,6 +23,7 @@ import com.dianping.data.warehouse.canaan.common.HiveCMDInfo;
 import com.dianping.data.warehouse.canaan.dolite.DOLite;
 import com.dianping.data.warehouse.canaan.exception.HiveClientNotFoundException;
 import com.dianping.data.warehouse.canaan.log.FileHiveLog;
+import org.apache.log4j.Logger;
 
 /**
  * TODO Comment of SQLExecutor
@@ -31,6 +32,7 @@ import com.dianping.data.warehouse.canaan.log.FileHiveLog;
  *
  */
 public class Executor {
+    public static Logger logger;
     private Calculator calculator;
     private static FileHiveLog fileHiveLog;
     private DOLite doLite = null;
@@ -48,14 +50,19 @@ public class Executor {
     }
 
     public Executor(Calculator calculator) throws IOException {
+        logger = Logger.getLogger(Executor.class);
+        logger.info("Excutor init");
         fileHiveLog = new FileHiveLog();
+        logger.info("hive log file is " + fileHiveLog);
         this.setCalculator(calculator);
     }
 
     public int execute() throws Exception {
+        logger.info("Executor execute() begins...");
         fileHiveLog.init("");
         int retCode = calculator.calculate(doLite);
         fileHiveLog.destroy("");
+        logger.info("Executor execute() ends... and the return code is " + retCode );
         return retCode;
     }
 

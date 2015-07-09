@@ -27,6 +27,7 @@ import java.util.Date;
 import com.dianping.data.warehouse.canaan.common.Constants;
 import com.dianping.data.warehouse.canaan.common.HiveCMDInfo;
 import com.dianping.data.warehouse.canaan.common.HiveJobInfo;
+import org.apache.log4j.Logger;
 
 /**
  * TODO Comment of FileLog
@@ -36,6 +37,7 @@ import com.dianping.data.warehouse.canaan.common.HiveJobInfo;
  */
 public class FileHiveLog implements HiveLog {
 	// private final static SimpleDateFormat sdf = Constants.SHORT_DF;
+	public static Logger logger= null;
 	private final static SimpleDateFormat ldf = Constants.LONG_DF;
 	private final static HiveLogConf conf = HiveLogConf.getConf();
 	private String logPath;
@@ -50,13 +52,23 @@ public class FileHiveLog implements HiveLog {
 	}
 
 	public FileHiveLog() throws IOException {
+		logger = Logger.getLogger(FileHiveLog.class);
+		logger.info("FileHiveLog init ,to get hive log conf");
 		HiveLogConf conf = HiveLogConf.getConf();
+		if (conf.getLogPath() != null) {
+			logger.info("hive log path is valid,the path is " + conf.getLogPath());
+		}
 		this.logPath = conf.getLogPath();
-
 		this.file = new File(logPath);
 
 		// check the file existence or create the file
-		file.createNewFile();
+		if(file.createNewFile()) {
+			logger.info("create hive log file sucess");
+		} else {
+			logger.info("create hive log file failed");
+		};
+		logger.info("hello");
+
         file.setWritable(true,false);
 
 		// outputstream initialization
