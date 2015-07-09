@@ -102,9 +102,10 @@ public class Manager {
         logger.info("SQLParser Begins");
         SQLParser sqlParser = new SQLParser(conf.getDOLite());
         //得到上下游关系和hive sql，并且持久化到AnalyzeResult
-        sqlParser.parse();
+        //sqlParser.parse();
         //将上下游关系插入数据库
-        sqlParser.persist();
+        //sqlParser.persist();
+
         logger.info(sqlParser.toString());
         logger.info("SQLParser Ends");
     }
@@ -116,6 +117,7 @@ public class Manager {
                         .toString());
         Class<?> CalculatorClass = Class.forName(classType);
         Calculator calculator = (Calculator) CalculatorClass.newInstance();
+        System.out.println("hive init......");
         calculator
                 .initHive(
                         conf.getCanaanVariables(Constants.BATCH_COMMON_VARS.BATCH_HIVE_CLIENT
@@ -125,9 +127,12 @@ public class Manager {
                         Constants.BATCH_COMMON_VARS.CANAAN_HOME.toString() + "=" + conf.getCanaanVariables(Constants.BATCH_COMMON_VARS.CANAAN_HOME.toString())
                         , conf.getHiveTmpPath()
                 );
+        System.out.println("hive init done!");
+        logger.info("hive init done!");
         Executor executor = new Executor(calculator);
         executor.setDOLite(conf.getDOLite());
         int retCode = executor.execute();
+        System.out.println("hive sql execute return code is " + retCode);
         logger.info("Executor Ends");
         return retCode;
     }
@@ -141,7 +146,7 @@ public class Manager {
         Properties p = parseOption();
         boolean parseOnly = p.getProperty(Constants.BATCH_COMMON_VARS.BATCH_PARSE_ONLY.toString()).equals("T");
         parseDOL(parseOnly);
-        parseSQL();
+        //parseSQL();
         int status = 0;
         if (!parseOnly)
             status = execute();

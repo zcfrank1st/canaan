@@ -64,7 +64,6 @@ public class CanaanConf {
 	 */
 	private void init() throws FileNotFoundException, IOException {
 		loadEnvConf();
-		
 		loadDefaultConf(new StringBuilder()
 				.append(getCanaanVariables(Constants.BATCH_COMMON_VARS.CANAAN_CONF_DIR
 						.toString())).append(File.separator)
@@ -85,11 +84,13 @@ public class CanaanConf {
 		String confsub = getEnvConfVariables(Constants.BATCH_COMMON_VARS.CANAAN_CONF_SUBDIR
 				.toString());
 
+		String canaanConfDir = new StringBuilder().append(home).append(File.separator)
+				.append("conf").append(File.separator).append(confsub)
+				.toString();
+
 		envConf.put(
-				Constants.BATCH_COMMON_VARS.CANAAN_CONF_DIR.toString(),
-				new StringBuilder().append(home).append(File.separator)
-						.append("conf").append(File.separator).append(confsub)
-						.toString());
+				Constants.BATCH_COMMON_VARS.CANAAN_CONF_DIR.toString(),canaanConfDir
+				);
 	}
 	
 	/*************

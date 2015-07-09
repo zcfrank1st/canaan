@@ -34,7 +34,7 @@ import com.dianping.data.warehouse.canaan.log.HiveLogConf;
  */
 public class TestExecutor extends TestCase {
 	static List<String> stringList = new ArrayList<String>();
-	static DOLite doLite = new DOLiteImpl(null,"test_c", stringList);
+	static DOLite doLite = new DOLiteImpl("test_c", stringList);
 
 	public void testExecute() throws Exception {
 		// stringList.add("create database bi;");

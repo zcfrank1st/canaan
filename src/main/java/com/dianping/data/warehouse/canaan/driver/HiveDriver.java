@@ -36,8 +36,8 @@ import org.apache.log4j.Logger;
  */
 public class HiveDriver implements Driver {
     private String[] CMD_HEAD = {"/usr/bin/env", "bash",
-            "/home/cyf/hive-0.8.1/bin/hive", "-i",
-            "/home/cyf/canaan/init/hive-init.sql", "-f", "", "-hiveconf", "CANAAN_HOME=/home/cyf/canaan"};
+            "/hadoop/apache-hive-0.13.1-cdh5.2.1-bin/bin/hive", "-i",
+            "/home/hadoop/canaan/init/hive-init.sql", "-f", "/home/hadoop/canaan/tmp/log.cmd", "-hiveconf", "CANAAN_HOME=/home/hadoop/canaan"};
     private Logger logger = Logger.getLogger(HiveDriver.class);
     private String fileEncoding = "utf-8";
 
@@ -65,6 +65,8 @@ public class HiveDriver implements Driver {
         StringBuffer sb = new StringBuffer();
         // set StringBuffer empty
         sb.setLength(0);
+
+
         for (HiveCMDInfo hiveCI : list) {
             String tmp = hiveCI.getCMD();
             if (tmp.length() != 0) {
@@ -75,6 +77,7 @@ public class HiveDriver implements Driver {
         }
         if (sb.length() == 0)
             return Constants.RET_FAILED;
+        System.out.println("hive tmp file path:" + CMD_HEAD[6]);
         FileUtils.writeStringToFile(new File(CMD_HEAD[6]), sb.toString(), this.fileEncoding);
         Runtime rt = Runtime.getRuntime();
         String[] cmd = CMD_HEAD.clone();

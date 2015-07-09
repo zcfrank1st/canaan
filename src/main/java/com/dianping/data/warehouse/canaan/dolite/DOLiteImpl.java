@@ -7,8 +7,8 @@ public class DOLiteImpl implements DOLite {
 	private String taskId;
 	private String fileName;
 	private List<String> statements;
-	public DOLiteImpl(String taskId,String fileName,List<String> statements){
-		this.taskId=taskId;
+	public DOLiteImpl(String fileName,List<String> statements){
+		//this.taskId=taskId;
 		this.fileName=fileName;
 		this.statements=statements;
 		
