@@ -40,27 +40,28 @@ public class DOLParser extends AbstractModule {
 
 	public DOLParser(CanaanConf canaanConf) throws IOException {
 		//modify by hongdi
-		String product = canaanConf.getCanaanVariables(Constants.BATCH_COMMON_VARS.BATCH_PRODUCT.toString());
-		
-		String group = canaanConf.getCanaanVariables(Constants.BATCH_COMMON_VARS.BATCH_GROUP.toString());
+//		String product = canaanConf.getCanaanVariables(Constants.BATCH_COMMON_VARS.BATCH_PRODUCT.toString());
+//
+//		String group = canaanConf.getCanaanVariables(Constants.BATCH_COMMON_VARS.BATCH_GROUP.toString());
 		String baseHome = canaanConf.getCanaanVariables(Constants.BATCH_COMMON_VARS.BATCH_BASE_DOL_DIR.toString());
-		
-		System.err.println("product :="+ product);
-		System.err.println("group :="+ group);
-		System.err.println("baseHome :="+ baseHome);
-		
-		if(!StringUtil.isEmpty(group)){
-			if(!StringUtil.isEmpty(product)){
-				this.DOLHome = new StringBuilder().append(baseHome).append(File.separator).append(group).append(File.separator).append(product).toString();
-			}else{
-				this.DOLHome = new StringBuilder().append(baseHome).append(File.separator).append(group).toString();
-			}
-								
-		}else{
-			this.DOLHome = canaanConf.getCanaanVariables(Constants.BATCH_COMMON_VARS.BATCH_DOL_DIR.toString());
-		}
-		
-		System.err.println("DOLHome :="+ DOLHome);
+
+//
+//		System.err.println("product :="+ product);
+//		System.err.println("group :="+ group);
+//		System.err.println("baseHome :="+ baseHome);
+//
+//		if(!StringUtil.isEmpty(group)){
+//			if(!StringUtil.isEmpty(product)){
+//				this.DOLHome = new StringBuilder().append(baseHome).append(File.separator).append(group).append(File.separator).append(product).toString();
+//			}else{
+//				this.DOLHome = new StringBuilder().append(baseHome).append(File.separator).append(group).toString();
+//			}
+//
+//		}else{
+//			this.DOLHome = canaanConf.getCanaanVariables(Constants.BATCH_COMMON_VARS.BATCH_DOL_DIR.toString());
+//		}
+		this.DOLHome = baseHome+ "/dol";
+		System.err.println("DOLHome :"+ DOLHome);
 		
         this.fileName = canaanConf.getCanaanVariables(Constants.BATCH_COMMON_VARS.BATCH_DOL.toString());
         if (canaanConf.getCanaanVariables(Constants.BATCH_COMMON_VARS.BATCH_DOL_TYPE.toString()).equals(Constants.DOL_TYPE_DOL))
