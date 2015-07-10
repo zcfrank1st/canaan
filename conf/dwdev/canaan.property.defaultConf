@@ -10,7 +10,7 @@
 <entry key="BATCH_DOL">dwdev.tg.dpmid_tg_test.dol</entry>
 <entry key="BATCH_TASK_ID">-999</entry>
 <entry key="BATCH_LOG_DIR">${CANAAN_HOME}/log</entry>
-<entry key="BATCH_DOL_DIR">${CANAAN_HOME}/dol</entry>
+<entry key="BATCH_DOL_DIR">${HOME}/dol</entry>
 <entry key="BATCH_BASE_DOL_DIR">${HOME}</entry>
 <entry key="BATCH_MYJAR_DIR">${CANAAN_HOME}/myjar</entry>
 <entry key="BATCH_HIVE_CLIENT">${HIVE_HOME}/bin/hive</entry>

@@ -93,19 +93,19 @@ public class Constants {
 
     static {
         Constants.param2DescMapping.put(Constants.PARAM_IN_H, Constants.PARAM_IN_DESC_H);
-        Constants.param2DescMapping.put(Constants.PARAM_IN_C, Constants.PARAM_IN_DESC_C);
+        //Constants.param2DescMapping.put(Constants.PARAM_IN_C, Constants.PARAM_IN_DESC_C);
         Constants.param2DescMapping.put(Constants.PARAM_IN_DOL, Constants.PARAM_IN_DESC_DOL);
         Constants.param2DescMapping.put(Constants.PARAM_IN_D, Constants.PARAM_IN_DESC_D);
 //		Constants.param2DescMapping.put(Constants.PARAM_IN_S, Constants.PARAM_IN_DESC_S);
 //		Constants.param2DescMapping.put(Constants.PARAM_IN_U, Constants.PARAM_IN_DESC_U);
-        Constants.param2DescMapping.put(Constants.PARAM_IN_TID, Constants.PARAM_IN_DESC_TID);
+        //Constants.param2DescMapping.put(Constants.PARAM_IN_TID, Constants.PARAM_IN_DESC_TID);
         Constants.param2DescMapping.put(Constants.PARAM_IN_PRINT, Constants.PARAM_IN_DESC_PRINT);
-        Constants.param2DescMapping.put(Constants.PARAM_IN_STR, Constants.PARAM_IN_DESC_STR);
+        //Constants.param2DescMapping.put(Constants.PARAM_IN_STR, Constants.PARAM_IN_DESC_STR);
         //add by hongdi
-        Constants.param2DescMapping.put(Constants.PARAM_IN_G, Constants.PARAM_IN_DESC_G);
-        Constants.param2DescMapping.put(Constants.PARAM_IN_P, Constants.PARAM_IN_DESC_P);
-        Constants.param2DescMapping.put(Constants.PARAM_IN_T, Constants.PARAM_IN_DESC_T);
-        Constants.param2DescMapping.put(Constants.PARAM_IN_INSTID, Constants.PARAM_IN_DESC_INSTID);
+        //Constants.param2DescMapping.put(Constants.PARAM_IN_G, Constants.PARAM_IN_DESC_G);
+        //Constants.param2DescMapping.put(Constants.PARAM_IN_P, Constants.PARAM_IN_DESC_P);
+        //Constants.param2DescMapping.put(Constants.PARAM_IN_T, Constants.PARAM_IN_DESC_T);
+        //Constants.param2DescMapping.put(Constants.PARAM_IN_INSTID, Constants.PARAM_IN_DESC_INSTID);
     }
 
     public static enum BATCH_SERVERS {

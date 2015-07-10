@@ -62,12 +62,12 @@ public class OptionParser {
         }
 
         // for -E <paramN=valN>
-        OptionBuilder.withArgName(Constants.PARAM_IN_DESC_EXT_ARG);
-        OptionBuilder.hasArgs(2);
-        OptionBuilder.withValueSeparator(Constants.PARAM_IN_EXT_DELIMITER);
-        OptionBuilder.withDescription(Constants.PARAM_IN_DESC_EXT);
-        Option property = OptionBuilder.create(Constants.PARAM_IN_EXT);
-        options.addOption(property);
+//        OptionBuilder.withArgName(Constants.PARAM_IN_DESC_EXT_ARG);
+//        OptionBuilder.hasArgs(2);
+//        OptionBuilder.withValueSeparator(Constants.PARAM_IN_EXT_DELIMITER);
+//        OptionBuilder.withDescription(Constants.PARAM_IN_DESC_EXT);
+//        Option property = OptionBuilder.create(Constants.PARAM_IN_EXT);
+//        options.addOption(property);
         parser = new PosixParser();
     }
 
