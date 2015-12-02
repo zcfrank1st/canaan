@@ -127,7 +127,6 @@ public class Manager {
                         Constants.BATCH_COMMON_VARS.CANAAN_HOME.toString() + "=" + conf.getCanaanVariables(Constants.BATCH_COMMON_VARS.CANAAN_HOME.toString())
                         , conf.getHiveTmpPath()
                 );
-        System.out.println("hive init done!");
         logger.info("hive init done!");
         Executor executor = new Executor(calculator);
         executor.setDOLite(conf.getDOLite());

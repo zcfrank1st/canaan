@@ -104,7 +104,7 @@ public class Constants {
         //add by hongdi
         //Constants.param2DescMapping.put(Constants.PARAM_IN_G, Constants.PARAM_IN_DESC_G);
         //Constants.param2DescMapping.put(Constants.PARAM_IN_P, Constants.PARAM_IN_DESC_P);
-        //Constants.param2DescMapping.put(Constants.PARAM_IN_T, Constants.PARAM_IN_DESC_T);
+        Constants.param2DescMapping.put(Constants.PARAM_IN_T, Constants.PARAM_IN_DESC_T);
         //Constants.param2DescMapping.put(Constants.PARAM_IN_INSTID, Constants.PARAM_IN_DESC_INSTID);
     }
 
